@@ -174,11 +174,6 @@
       color: #9a3412;
     }
 
-    .badge-score {
-      background: #ede9fe;
-      color: #5b21b6;
-    }
-
     .actions-inline {
       display: flex;
       gap: 6px;
@@ -214,6 +209,10 @@
       color: #555;
       margin-top: -6px;
       margin-bottom: 18px;
+    }
+
+    .search-row {
+      margin-bottom: 12px;
     }
 
     @media (max-width: 700px) {
@@ -334,12 +333,18 @@
 
     <div class="card">
       <h2>Tüm Past Paperlar</h2>
+
+      <div class="search-row">
+        <input type="text" id="searchInput" placeholder="Ara... (örn: physics, tz2, 2023, paper 1, 32/40, zordu)" oninput="handleSearch()">
+      </div>
+
       <div class="actions-inline" style="margin-bottom: 10px;">
         <button class="btn-secondary" onclick="setFilter('all')">Tümü</button>
         <button class="btn-success" onclick="setFilter('completed')">Tamamlananlar</button>
         <button class="btn-danger" onclick="setFilter('unfinished')">Tamamlanmayanlar</button>
         <button class="btn-warning" onclick="setFilter('repeat')">Repeat Olanlar</button>
       </div>
+
       <div id="paperTable"></div>
     </div>
   </div>
@@ -377,6 +382,7 @@
 
     let papers = [];
     let currentFilter = "all";
+    let searchTerm = "";
 
     function getTodayDate() {
       const now = new Date();
@@ -445,6 +451,27 @@
       div.textContent = text || "";
       return div.innerHTML;
     }
+
+    function matchesSearch(p) {
+      if (!searchTerm) return true;
+
+      const combined = [
+        p.subject || "",
+        p.year || "",
+        p.session || "",
+        p.tz || "",
+        p.paper || "",
+        p.score || "",
+        p.note || ""
+      ].join(" ").toLowerCase();
+
+      return combined.includes(searchTerm);
+    }
+
+    window.handleSearch = function() {
+      searchTerm = document.getElementById("searchInput").value.trim().toLowerCase();
+      renderTable();
+    };
 
     window.setFilter = function(filter) {
       currentFilter = filter;
@@ -671,6 +698,8 @@
       } else if (currentFilter === "repeat") {
         filtered = filtered.filter(p => p.repeat);
       }
+
+      filtered = filtered.filter(matchesSearch);
 
       if (filtered.length === 0) {
         container.innerHTML = '<div class="empty">Gösterilecek paper yok.</div>';
