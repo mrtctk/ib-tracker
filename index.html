@@ -15,7 +15,7 @@
     }
 
     .container {
-      max-width: 1150px;
+      max-width: 1200px;
       margin: 30px auto;
       padding: 20px;
     }
@@ -69,6 +69,7 @@
     .btn-danger { background: #dc2626; color: white; }
     .btn-secondary { background: #6b7280; color: white; }
     .btn-warning { background: #ea580c; color: white; }
+    .btn-score { background: #7c3aed; color: white; }
 
     .stats {
       font-size: 22px;
@@ -178,6 +179,11 @@
       color: #9a3412;
     }
 
+    .badge-score {
+      background: #ede9fe;
+      color: #5b21b6;
+    }
+
     .actions-inline {
       display: flex;
       gap: 6px;
@@ -194,6 +200,19 @@
       overflow-wrap: anywhere;
       word-break: break-word;
       max-width: 100%;
+    }
+
+    .score-box {
+      margin-top: 6px;
+      padding: 8px 10px;
+      background: #f5f3ff;
+      border-left: 4px solid #a78bfa;
+      border-radius: 8px;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+      max-width: 100%;
+      font-weight: bold;
     }
 
     .top-note {
@@ -259,6 +278,7 @@
         </select>
 
         <input type="text" id="paper" placeholder="Paper (örn: Paper 1)">
+        <input type="text" id="score" placeholder="Score / Result (örn: 32/40 veya %78)">
       </div>
 
       <div style="margin-top: 12px;">
@@ -409,12 +429,19 @@
         html += `<div class="section-block"><h3>${subject}</h3><ul>`;
         grouped[subject].forEach(p => {
           html += `<li>${escapeHtml(p.paper)} | ${escapeHtml(p.year)} | ${escapeHtml(p.session)} | ${escapeHtml(p.tz)}`;
+
+          if (p.score && p.score.trim() !== "") {
+            html += `<div class="score-box">📊 Sonuç: ${escapeHtml(p.score)}</div>`;
+          }
+
           if (p.note && p.note.trim() !== "") {
             html += `<div class="note-box">📝 ${escapeHtml(p.note)}</div>`;
           }
+
           if (p.repeat) {
             html += ` <span class="badge badge-repeat">🔁 Repeat</span>`;
           }
+
           html += `</li>`;
         });
         html += `</ul></div>`;
@@ -440,6 +467,7 @@
       const session = document.getElementById("session").value;
       const tz = document.getElementById("tz").value;
       const paper = document.getElementById("paper").value.trim();
+      const score = document.getElementById("score").value.trim();
       const note = document.getElementById("note").value.trim();
 
       if (!subject || !year || !session || !tz || !paper) {
@@ -454,6 +482,7 @@
           session,
           tz,
           paper,
+          score,
           note,
           completed: false,
           completedDate: null,
@@ -466,6 +495,7 @@
         document.getElementById("session").value = "";
         document.getElementById("tz").value = "";
         document.getElementById("paper").value = "";
+        document.getElementById("score").value = "";
         document.getElementById("note").value = "";
       } catch (error) {
         alert("Ekleme hatası: " + error.message);
@@ -518,6 +548,23 @@
         });
       } catch (error) {
         alert("Not güncelleme hatası: " + error.message);
+        console.error(error);
+      }
+    };
+
+    window.editScore = async function(id) {
+      const paper = papers.find(p => p.id === id);
+      const currentScore = paper ? (paper.score || "") : "";
+
+      const newScore = prompt("Yeni score / result gir:", currentScore);
+      if (newScore === null) return;
+
+      try {
+        await updateDoc(doc(db, "papers", id), {
+          score: newScore.trim()
+        });
+      } catch (error) {
+        alert("Score güncelleme hatası: " + error.message);
         console.error(error);
       }
     };
@@ -655,6 +702,7 @@
               <th>Paper</th>
               <th>Durum</th>
               <th>Tarih</th>
+              <th>Score</th>
               <th>Not</th>
               <th>İşlem</th>
             </tr>
@@ -679,6 +727,9 @@
                 : '<span class="badge badge-notdone">BİTMEDİ</span>'}
             </td>
             <td data-label="Tarih">${p.completedDate || "-"}</td>
+            <td data-label="Score">
+              ${p.score && p.score.trim() !== "" ? `<div class="score-box">${escapeHtml(p.score)}</div>` : "-"}
+            </td>
             <td data-label="Not">
               ${p.note && p.note.trim() !== "" ? `<div class="note-box">${escapeHtml(p.note)}</div>` : "-"}
             </td>
@@ -690,6 +741,9 @@
                 </button>
                 <button class="btn-warning" onclick="toggleRepeat('${p.id}', ${p.repeat})">
                   ${p.repeat ? "Repeat Kaldır" : "Repeat Again"}
+                </button>
+                <button class="btn-score" onclick="editScore('${p.id}')">
+                  Score Düzenle
                 </button>
                 <button class="btn-primary" onclick="editNote('${p.id}')">
                   Not Düzenle
