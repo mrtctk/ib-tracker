@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>IB Tracker</title>
+<style>
+body { font-family: Arial; padding: 20px; background: #f5f5f5; }
+.card { background: white; padding: 15px; margin-top: 15px; border-radius: 10px; }
+.done { color: green; }
+.notdone { color: red; }
+</style>
+</head>
+<body>
+
+<h1>IB Past Paper Tracker</h1>
+
+<div class="card">
+<input id="subject" placeholder="Ders">
+<input id="year" placeholder="Yıl">
+<select id="session">
+<option>May</option>
+<option>November</option>
+</select>
+<select id="tz">
+<option>TZ0</option>
+<option>TZ1</option>
+<option>TZ2</option>
+<option>TZ3</option>
+</select>
+<input id="paper" placeholder="Paper 1">
+<button onclick="add()">Ekle</button>
+</div>
+
+<div class="card">
+<p id="stats"></p>
+</div>
+
+<div class="card">
+<ul id="today"></ul>
+</div>
+
+<div class="card">
+<ul id="list"></ul>
+</div>
+
+<script>
+let data = JSON.parse(localStorage.getItem("ib")) || [];
+
+function save() {
+  localStorage.setItem("ib", JSON.stringify(data));
+}
+
+function todayDate() {
+  return new Date().toISOString().split("T")[0];
+}
+
+function add() {
+  let subject = document.getElementById("subject").value;
+  let year = document.getElementById("year").value;
+  let session = document.getElementById("session").value;
+  let tz = document.getElementById("tz").value;
+  let paper = document.getElementById("paper").value;
+
+  data.push({subject, year, session, tz, paper, done:false, date:null});
+  save();
+  render();
+}
+
+function markDone(i) {
+  data[i].done = true;
+  data[i].date = todayDate();
+  save();
+  render();
+}
+
+function remove(i) {
+  data.splice(i,1);
+  save();
+  render();
+}
+
+function render() {
+  let list = "";
+  let todayList = "";
+
+  let total = data.length;
+  let done = data.filter(x => x.done).length;
+
+  let today = todayDate();
+  let todayCount = data.filter(x => x.date === today).length;
+
+  data.forEach((p,i) => {
+    list += `<li>
+      ${p.subject} | ${p.year} | ${p.session} | ${p.tz} | ${p.paper}
+      ${p.done ? "<span class='done'>BİTTİ</span>" : "<span class='notdone'>BİTMEDİ</span>"}
+      <button onclick="markDone(${i})">✔</button>
+      <button onclick="remove(${i})">X</button>
+    </li>`;
+  });
+
+  data.filter(p => p.date === today).forEach(p => {
+    todayList += `<li>${p.subject} - ${p.paper}</li>`;
+  });
+
+  document.getElementById("list").innerHTML = list;
+  document.getElementById("today").innerHTML = todayList;
+
+  let percent = total ? ((done/total)*100).toFixed(1) : 0;
+
+  document.getElementById("stats").innerHTML =
+    `Toplam: ${total} | Biten: ${done} | Bugün: ${todayCount} | %${percent}`;
+}
+
+render();
+</script>
+
+</body>
+</html>
