@@ -397,7 +397,7 @@
       Object.keys(grouped).sort().forEach(subject => {
         html += `<div class="section-block"><h3>${subject}</h3><ul>`;
         grouped[subject].forEach(p => {
-          html += `<li>${p.paper} | ${p.year} | ${p.session} | ${p.tz}`;
+          html += `<li>${escapeHtml(p.paper)} | ${escapeHtml(p.year)} | ${escapeHtml(p.session)} | ${escapeHtml(p.tz)}`;
           if (p.note && p.note.trim() !== "") {
             html += `<div class="note-box">📝 ${escapeHtml(p.note)}</div>`;
           }
@@ -414,7 +414,7 @@
 
     function escapeHtml(text) {
       const div = document.createElement("div");
-      div.textContent = text;
+      div.textContent = text || "";
       return div.innerHTML;
     }
 
@@ -494,8 +494,11 @@
       }
     };
 
-    window.editNote = async function(id, currentNote) {
-      const newNote = prompt("Yeni notu gir:", currentNote || "");
+    window.editNote = async function(id) {
+      const paper = papers.find(p => p.id === id);
+      const currentNote = paper ? (paper.note || "") : "";
+
+      const newNote = prompt("Yeni notu gir:", currentNote);
       if (newNote === null) return;
 
       try {
@@ -562,7 +565,7 @@
         const div = document.createElement("div");
         div.className = "subject-box";
         div.innerHTML = `
-          <strong>${subject}</strong>
+          <strong>${escapeHtml(subject)}</strong>
           <div class="small">${stats.completed}/${stats.total} tamamlandı</div>
           <div class="progress-bar" style="margin-top:8px;">
             <div class="progress-fill" style="width:${percent}%;"></div>
@@ -677,7 +680,7 @@
                 <button class="btn-warning" onclick="toggleRepeat('${p.id}', ${p.repeat})">
                   ${p.repeat ? "Repeat Kaldır" : "Repeat Again"}
                 </button>
-                <button class="btn-primary" onclick="editNote('${p.id}', ${JSON.stringify(p.note || "")})">
+                <button class="btn-primary" onclick="editNote('${p.id}')">
                   Not Düzenle
                 </button>
                 <button class="btn-danger" onclick="deletePaper('${p.id}')">Sil</button>
