@@ -1,118 +1,546 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8">
-<title>IB Tracker</title>
-<style>
-body { font-family: Arial; padding: 20px; background: #f5f5f5; }
-.card { background: white; padding: 15px; margin-top: 15px; border-radius: 10px; }
-.done { color: green; }
-.notdone { color: red; }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IB Tracker</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      color: #111;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 30px auto;
+      padding: 20px;
+    }
+
+    h1, h2, h3 {
+      margin-top: 0;
+    }
+
+    .card {
+      background: white;
+      padding: 18px;
+      margin-bottom: 18px;
+      border-radius: 14px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    }
+
+    .grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .grid-2 {
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+
+    .grid-4 {
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    }
+
+    input, select, button {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid #d0d0d0;
+      font-size: 14px;
+    }
+
+    button {
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary {
+      background: #2563eb;
+      color: white;
+    }
+
+    .btn-success {
+      background: #16a34a;
+      color: white;
+    }
+
+    .btn-danger {
+      background: #dc2626;
+      color: white;
+    }
+
+    .btn-secondary {
+      background: #6b7280;
+      color: white;
+    }
+
+    .stats {
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 18px;
+      background: #e5e7eb;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: #2563eb;
+      width: 0%;
+    }
+
+    .subject-box {
+      padding: 12px;
+      border-radius: 12px;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+    }
+
+    .small {
+      font-size: 13px;
+      color: #666;
+    }
+
+    .empty {
+      color: #777;
+      padding: 10px 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 12px 10px;
+      border-bottom: 1px solid #ececec;
+      vertical-align: middle;
+    }
+
+    th {
+      background: #f9fafb;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .badge-done {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .badge-notdone {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .actions-inline {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .top-note {
+      color: #555;
+      margin-top: -6px;
+      margin-bottom: 18px;
+    }
+
+    @media (max-width: 700px) {
+      table, thead, tbody, th, td, tr {
+        display: block;
+      }
+
+      thead {
+        display: none;
+      }
+
+      tr {
+        background: white;
+        margin-bottom: 12px;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 10px;
+      }
+
+      td {
+        border: none;
+        padding: 8px 0;
+      }
+
+      td::before {
+        content: attr(data-label);
+        font-weight: bold;
+        display: block;
+        margin-bottom: 4px;
+      }
+    }
+  </style>
 </head>
 <body>
+  <div class="container">
+    <h1>IB Past Paper Tracker</h1>
+    <p class="top-note">Bu sürüm Firebase ile senkronize çalışır. Aynı linki açan cihazlarda aynı veriler görünür.</p>
 
-<h1>IB Past Paper Tracker</h1>
+    <div class="card">
+      <h2>Yeni Past Paper Ekle</h2>
+      <div class="grid grid-2">
+        <input type="text" id="subject" placeholder="Ders (örn: Physics HL)">
+        <input type="text" id="year" placeholder="Yıl (örn: 2023)">
 
-<div class="card">
-<input id="subject" placeholder="Ders">
-<input id="year" placeholder="Yıl">
-<select id="session">
-<option>May</option>
-<option>November</option>
-</select>
-<select id="tz">
-<option>TZ0</option>
-<option>TZ1</option>
-<option>TZ2</option>
-<option>TZ3</option>
-</select>
-<input id="paper" placeholder="Paper 1">
-<button onclick="add()">Ekle</button>
-</div>
+        <select id="session">
+          <option value="">Session seç</option>
+          <option value="May">May</option>
+          <option value="November">November</option>
+        </select>
 
-<div class="card">
-<p id="stats"></p>
-</div>
+        <select id="tz">
+          <option value="">TZ seç</option>
+          <option value="TZ0">TZ0</option>
+          <option value="TZ1">TZ1</option>
+          <option value="TZ2">TZ2</option>
+          <option value="TZ3">TZ3</option>
+        </select>
 
-<div class="card">
-<ul id="today"></ul>
-</div>
+        <input type="text" id="paper" placeholder="Paper (örn: Paper 1)">
+      </div>
 
-<div class="card">
-<ul id="list"></ul>
-</div>
+      <div style="margin-top:12px;">
+        <button class="btn-primary" onclick="addPaper()">Past Paper Ekle</button>
+      </div>
+    </div>
 
-<script>
-let data = JSON.parse(localStorage.getItem("ib")) || [];
+    <div class="grid grid-4">
+      <div class="card">
+        <h3>Toplam</h3>
+        <div class="stats" id="totalCount">0</div>
+      </div>
+      <div class="card">
+        <h3>Tamamlanan</h3>
+        <div class="stats" id="completedCount">0</div>
+      </div>
+      <div class="card">
+        <h3>Kalan</h3>
+        <div class="stats" id="remainingCount">0</div>
+      </div>
+      <div class="card">
+        <h3>Bugün</h3>
+        <div class="stats" id="todayCount">0</div>
+      </div>
+    </div>
 
-function save() {
-  localStorage.setItem("ib", JSON.stringify(data));
-}
+    <div class="card">
+      <h2>Genel İlerleme</h2>
+      <div id="progressText">%0.0</div>
+      <div class="progress-bar">
+        <div id="progressFill" class="progress-fill"></div>
+      </div>
+    </div>
 
-function todayDate() {
-  return new Date().toISOString().split("T")[0];
-}
+    <div class="card">
+      <h2>Ders Bazında İlerleme</h2>
+      <div id="subjectProgress" class="grid grid-2"></div>
+    </div>
 
-function add() {
-  let subject = document.getElementById("subject").value;
-  let year = document.getElementById("year").value;
-  let session = document.getElementById("session").value;
-  let tz = document.getElementById("tz").value;
-  let paper = document.getElementById("paper").value;
+    <div class="card">
+      <h2>Bugün Çözdüklerin</h2>
+      <div id="todayList"></div>
+    </div>
 
-  data.push({subject, year, session, tz, paper, done:false, date:null});
-  save();
-  render();
-}
+    <div class="card">
+      <h2>Tüm Past Paperlar</h2>
+      <div class="actions-inline" style="margin-bottom: 10px;">
+        <button class="btn-secondary" onclick="setFilter('all')">Tümü</button>
+        <button class="btn-success" onclick="setFilter('completed')">Tamamlananlar</button>
+        <button class="btn-danger" onclick="setFilter('unfinished')">Tamamlanmayanlar</button>
+      </div>
+      <div id="paperTable"></div>
+    </div>
+  </div>
 
-function markDone(i) {
-  data[i].done = true;
-  data[i].date = todayDate();
-  save();
-  render();
-}
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+    import {
+      getFirestore,
+      collection,
+      addDoc,
+      updateDoc,
+      deleteDoc,
+      doc,
+      onSnapshot,
+      query,
+      orderBy,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
 
-function remove(i) {
-  data.splice(i,1);
-  save();
-  render();
-}
+    const firebaseConfig = {
+      apiKey: "AIzaSyCJy3O5GqABLuEi9pJ2C9yp_uxTL1NKbIU",
+      authDomain: "ib-tracker-3fa15.firebaseapp.com",
+      projectId: "ib-tracker-3fa15",
+      storageBucket: "ib-tracker-3fa15.firebasestorage.app",
+      messagingSenderId: "1084870933621",
+      appId: "1:1084870933621:web:42aaf1a1c273f2e6fb8c3c",
+      measurementId: "G-SHTVY448SY"
+    };
 
-function render() {
-  let list = "";
-  let todayList = "";
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
-  let total = data.length;
-  let done = data.filter(x => x.done).length;
+    const papersRef = collection(db, "papers");
+    const papersQuery = query(papersRef, orderBy("createdAt", "desc"));
 
-  let today = todayDate();
-  let todayCount = data.filter(x => x.date === today).length;
+    let papers = [];
+    let currentFilter = "all";
 
-  data.forEach((p,i) => {
-    list += `<li>
-      ${p.subject} | ${p.year} | ${p.session} | ${p.tz} | ${p.paper}
-      ${p.done ? "<span class='done'>BİTTİ</span>" : "<span class='notdone'>BİTMEDİ</span>"}
-      <button onclick="markDone(${i})">✔</button>
-      <button onclick="remove(${i})">X</button>
-    </li>`;
-  });
+    function getTodayDate() {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, "0");
+      const day = String(now.getDate()).padStart(2, "0");
+      return `${year}-${month}-${day}`;
+    }
 
-  data.filter(p => p.date === today).forEach(p => {
-    todayList += `<li>${p.subject} - ${p.paper}</li>`;
-  });
+    window.setFilter = function(filter) {
+      currentFilter = filter;
+      renderTable();
+    };
 
-  document.getElementById("list").innerHTML = list;
-  document.getElementById("today").innerHTML = todayList;
+    window.addPaper = async function() {
+      const subject = document.getElementById("subject").value.trim();
+      const year = document.getElementById("year").value.trim();
+      const session = document.getElementById("session").value;
+      const tz = document.getElementById("tz").value;
+      const paper = document.getElementById("paper").value.trim();
 
-  let percent = total ? ((done/total)*100).toFixed(1) : 0;
+      if (!subject || !year || !session || !tz || !paper) {
+        alert("Lütfen tüm alanları doldur.");
+        return;
+      }
 
-  document.getElementById("stats").innerHTML =
-    `Toplam: ${total} | Biten: ${done} | Bugün: ${todayCount} | %${percent}`;
-}
+      try {
+        await addDoc(papersRef, {
+          subject,
+          year,
+          session,
+          tz,
+          paper,
+          completed: false,
+          completedDate: null,
+          createdAt: serverTimestamp()
+        });
 
-render();
-</script>
+        document.getElementById("subject").value = "";
+        document.getElementById("year").value = "";
+        document.getElementById("session").value = "";
+        document.getElementById("tz").value = "";
+        document.getElementById("paper").value = "";
+      } catch (error) {
+        alert("Ekleme hatası: " + error.message);
+        console.error(error);
+      }
+    };
 
+    window.markCompleted = async function(id, currentCompleted) {
+      try {
+        const ref = doc(db, "papers", id);
+
+        if (currentCompleted) {
+          await updateDoc(ref, {
+            completed: false,
+            completedDate: null
+          });
+        } else {
+          await updateDoc(ref, {
+            completed: true,
+            completedDate: getTodayDate()
+          });
+        }
+      } catch (error) {
+        alert("Güncelleme hatası: " + error.message);
+        console.error(error);
+      }
+    };
+
+    window.deletePaper = async function(id) {
+      const ok = confirm("Bu paper silinsin mi?");
+      if (!ok) return;
+
+      try {
+        await deleteDoc(doc(db, "papers", id));
+      } catch (error) {
+        alert("Silme hatası: " + error.message);
+        console.error(error);
+      }
+    };
+
+    function renderStats() {
+      const total = papers.length;
+      const completed = papers.filter(p => p.completed).length;
+      const remaining = total - completed;
+      const today = getTodayDate();
+      const todayCount = papers.filter(p => p.completedDate === today).length;
+      const percentage = total > 0 ? ((completed / total) * 100).toFixed(1) : "0.0";
+
+      document.getElementById("totalCount").textContent = total;
+      document.getElementById("completedCount").textContent = completed;
+      document.getElementById("remainingCount").textContent = remaining;
+      document.getElementById("todayCount").textContent = todayCount;
+      document.getElementById("progressText").textContent = `%${percentage}`;
+      document.getElementById("progressFill").style.width = `${percentage}%`;
+    }
+
+    function renderSubjectProgress() {
+      const container = document.getElementById("subjectProgress");
+      container.innerHTML = "";
+
+      if (papers.length === 0) {
+        container.innerHTML = '<div class="empty">Henüz veri yok.</div>';
+        return;
+      }
+
+      const subjectMap = {};
+
+      papers.forEach(p => {
+        if (!subjectMap[p.subject]) {
+          subjectMap[p.subject] = { total: 0, completed: 0 };
+        }
+        subjectMap[p.subject].total += 1;
+        if (p.completed) subjectMap[p.subject].completed += 1;
+      });
+
+      Object.entries(subjectMap).forEach(([subject, stats]) => {
+        const percent = ((stats.completed / stats.total) * 100).toFixed(1);
+
+        const div = document.createElement("div");
+        div.className = "subject-box";
+        div.innerHTML = `
+          <strong>${subject}</strong>
+          <div class="small">${stats.completed}/${stats.total} tamamlandı</div>
+          <div class="progress-bar" style="margin-top:8px;">
+            <div class="progress-fill" style="width:${percent}%;"></div>
+          </div>
+          <div class="small" style="margin-top:6px;">%${percent}</div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function renderTodayList() {
+      const today = getTodayDate();
+      const todayPapers = papers.filter(p => p.completedDate === today);
+      const container = document.getElementById("todayList");
+
+      if (todayPapers.length === 0) {
+        container.innerHTML = '<div class="empty">Bugün henüz tamamlanan paper yok.</div>';
+        return;
+      }
+
+      let html = "<ul>";
+      todayPapers.forEach(p => {
+        html += `<li>${p.subject} | ${p.year} | ${p.session} | ${p.tz} | ${p.paper}</li>`;
+      });
+      html += "</ul>";
+      container.innerHTML = html;
+    }
+
+    function renderTable() {
+      const container = document.getElementById("paperTable");
+
+      let filtered = [...papers];
+
+      if (currentFilter === "completed") {
+        filtered = filtered.filter(p => p.completed);
+      } else if (currentFilter === "unfinished") {
+        filtered = filtered.filter(p => !p.completed);
+      }
+
+      if (filtered.length === 0) {
+        container.innerHTML = '<div class="empty">Gösterilecek paper yok.</div>';
+        return;
+      }
+
+      let html = `
+        <table>
+          <thead>
+            <tr>
+              <th>Ders</th>
+              <th>Yıl</th>
+              <th>Session</th>
+              <th>TZ</th>
+              <th>Paper</th>
+              <th>Durum</th>
+              <th>Tarih</th>
+              <th>İşlem</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
+
+      filtered.forEach(p => {
+        html += `
+          <tr>
+            <td data-label="Ders">${p.subject}</td>
+            <td data-label="Yıl">${p.year}</td>
+            <td data-label="Session">${p.session}</td>
+            <td data-label="TZ">${p.tz}</td>
+            <td data-label="Paper">${p.paper}</td>
+            <td data-label="Durum">
+              ${p.completed
+                ? '<span class="badge badge-done">BİTTİ</span>'
+                : '<span class="badge badge-notdone">BİTMEDİ</span>'}
+            </td>
+            <td data-label="Tarih">${p.completedDate || "-"}</td>
+            <td data-label="İşlem">
+              <div class="actions-inline">
+                <button class="${p.completed ? "btn-secondary" : "btn-success"}"
+                        onclick="markCompleted('${p.id}', ${p.completed})">
+                  ${p.completed ? "Geri Al" : "Tamamlandı"}
+                </button>
+                <button class="btn-danger" onclick="deletePaper('${p.id}')">Sil</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      });
+
+      html += "</tbody></table>";
+      container.innerHTML = html;
+    }
+
+    function renderAll() {
+      renderStats();
+      renderSubjectProgress();
+      renderTodayList();
+      renderTable();
+    }
+
+    onSnapshot(papersQuery, (snapshot) => {
+      papers = snapshot.docs.map(docItem => ({
+        id: docItem.id,
+        ...docItem.data()
+      }));
+      renderAll();
+    }, (error) => {
+      console.error(error);
+      document.getElementById("paperTable").innerHTML =
+        `<div class="empty">Firestore bağlantı hatası: ${error.message}</div>`;
+    });
+  </script>
 </body>
 </html>
