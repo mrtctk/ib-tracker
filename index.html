@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>IB Tracker</title>
+  <title>IB Past Paper Tracker</title>
   <style>
     * { box-sizing: border-box; }
 
@@ -15,7 +15,7 @@
     }
 
     .container {
-      max-width: 1100px;
+      max-width: 1150px;
       margin: 30px auto;
       padding: 20px;
     }
@@ -45,12 +45,18 @@
       grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
     }
 
-    input, select, button {
+    input, select, textarea, button {
       width: 100%;
       padding: 10px 12px;
       border-radius: 10px;
       border: 1px solid #d0d0d0;
       font-size: 14px;
+      font-family: inherit;
+    }
+
+    textarea {
+      min-height: 90px;
+      resize: vertical;
     }
 
     button {
@@ -58,25 +64,11 @@
       border: none;
     }
 
-    .btn-primary {
-      background: #2563eb;
-      color: white;
-    }
-
-    .btn-success {
-      background: #16a34a;
-      color: white;
-    }
-
-    .btn-danger {
-      background: #dc2626;
-      color: white;
-    }
-
-    .btn-secondary {
-      background: #6b7280;
-      color: white;
-    }
+    .btn-primary { background: #2563eb; color: white; }
+    .btn-success { background: #16a34a; color: white; }
+    .btn-danger { background: #dc2626; color: white; }
+    .btn-secondary { background: #6b7280; color: white; }
+    .btn-warning { background: #ea580c; color: white; }
 
     .stats {
       font-size: 22px;
@@ -115,6 +107,27 @@
       padding: 10px 0;
     }
 
+    .section-block {
+      margin-bottom: 18px;
+      padding: 12px;
+      border-radius: 12px;
+      background: #fafafa;
+      border: 1px solid #ececec;
+    }
+
+    .section-block h3 {
+      margin-bottom: 8px;
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    li {
+      margin-bottom: 6px;
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
@@ -125,7 +138,7 @@
       text-align: left;
       padding: 12px 10px;
       border-bottom: 1px solid #ececec;
-      vertical-align: middle;
+      vertical-align: top;
     }
 
     th {
@@ -138,6 +151,8 @@
       border-radius: 999px;
       font-size: 12px;
       font-weight: bold;
+      margin-right: 6px;
+      margin-bottom: 4px;
     }
 
     .badge-done {
@@ -150,25 +165,30 @@
       color: #991b1b;
     }
 
+    .badge-repeat {
+      background: #ffedd5;
+      color: #9a3412;
+    }
+
     .actions-inline {
       display: flex;
       gap: 6px;
       flex-wrap: wrap;
     }
 
+    .note-box {
+      margin-top: 6px;
+      padding: 8px 10px;
+      background: #f9fafb;
+      border-left: 4px solid #cbd5e1;
+      border-radius: 8px;
+      white-space: pre-wrap;
+    }
+
     .top-note {
       color: #555;
       margin-top: -6px;
       margin-bottom: 18px;
-    }
-
-    ul {
-      margin: 0;
-      padding-left: 20px;
-    }
-
-    li {
-      margin-bottom: 6px;
     }
 
     @media (max-width: 700px) {
@@ -205,7 +225,7 @@
 <body>
   <div class="container">
     <h1>IB Past Paper Tracker</h1>
-    <p class="top-note">Telefon ve Mac arasında senkron çalışan IB tracker.</p>
+    <p class="top-note">Telefon ve Mac arasında senkron çalışan çalışma takip sistemi.</p>
 
     <div class="card">
       <h2>Yeni Past Paper Ekle</h2>
@@ -228,6 +248,10 @@
         </select>
 
         <input type="text" id="paper" placeholder="Paper (örn: Paper 1)">
+      </div>
+
+      <div style="margin-top: 12px;">
+        <textarea id="note" placeholder="Not (örn: Matematik TZ1 Paper 1'de 3. soru zordu)"></textarea>
       </div>
 
       <div style="margin-top:12px;">
@@ -293,6 +317,7 @@
         <button class="btn-secondary" onclick="setFilter('all')">Tümü</button>
         <button class="btn-success" onclick="setFilter('completed')">Tamamlananlar</button>
         <button class="btn-danger" onclick="setFilter('unfinished')">Tamamlanmayanlar</button>
+        <button class="btn-warning" onclick="setFilter('repeat')">Repeat Olanlar</button>
       </div>
       <div id="paperTable"></div>
     </div>
@@ -349,6 +374,50 @@
       return `${year}-${month}-${day}`;
     }
 
+    function groupBySubject(list) {
+      const grouped = {};
+      list.forEach(item => {
+        if (!grouped[item.subject]) grouped[item.subject] = [];
+        grouped[item.subject].push(item);
+      });
+      return grouped;
+    }
+
+    function renderGroupedList(containerId, list, emptyText) {
+      const container = document.getElementById(containerId);
+
+      if (list.length === 0) {
+        container.innerHTML = `<div class="empty">${emptyText}</div>`;
+        return;
+      }
+
+      const grouped = groupBySubject(list);
+      let html = "";
+
+      Object.keys(grouped).sort().forEach(subject => {
+        html += `<div class="section-block"><h3>${subject}</h3><ul>`;
+        grouped[subject].forEach(p => {
+          html += `<li>${p.paper} | ${p.year} | ${p.session} | ${p.tz}`;
+          if (p.note && p.note.trim() !== "") {
+            html += `<div class="note-box">📝 ${escapeHtml(p.note)}</div>`;
+          }
+          if (p.repeat) {
+            html += ` <span class="badge badge-repeat">🔁 Repeat</span>`;
+          }
+          html += `</li>`;
+        });
+        html += `</ul></div>`;
+      });
+
+      container.innerHTML = html;
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement("div");
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
     window.setFilter = function(filter) {
       currentFilter = filter;
       renderTable();
@@ -360,9 +429,10 @@
       const session = document.getElementById("session").value;
       const tz = document.getElementById("tz").value;
       const paper = document.getElementById("paper").value.trim();
+      const note = document.getElementById("note").value.trim();
 
       if (!subject || !year || !session || !tz || !paper) {
-        alert("Lütfen tüm alanları doldur.");
+        alert("Lütfen ders, yıl, session, TZ ve paper alanlarını doldur.");
         return;
       }
 
@@ -373,8 +443,10 @@
           session,
           tz,
           paper,
+          note,
           completed: false,
           completedDate: null,
+          repeat: false,
           createdAt: serverTimestamp()
         });
 
@@ -383,13 +455,14 @@
         document.getElementById("session").value = "";
         document.getElementById("tz").value = "";
         document.getElementById("paper").value = "";
+        document.getElementById("note").value = "";
       } catch (error) {
         alert("Ekleme hatası: " + error.message);
         console.error(error);
       }
     };
 
-    window.markCompleted = async function(id, currentCompleted) {
+    window.toggleCompleted = async function(id, currentCompleted) {
       try {
         const ref = doc(db, "papers", id);
 
@@ -410,6 +483,31 @@
       }
     };
 
+    window.toggleRepeat = async function(id, currentRepeat) {
+      try {
+        await updateDoc(doc(db, "papers", id), {
+          repeat: !currentRepeat
+        });
+      } catch (error) {
+        alert("Repeat güncelleme hatası: " + error.message);
+        console.error(error);
+      }
+    };
+
+    window.editNote = async function(id, currentNote) {
+      const newNote = prompt("Yeni notu gir:", currentNote || "");
+      if (newNote === null) return;
+
+      try {
+        await updateDoc(doc(db, "papers", id), {
+          note: newNote.trim()
+        });
+      } catch (error) {
+        alert("Not güncelleme hatası: " + error.message);
+        console.error(error);
+      }
+    };
+
     window.deletePaper = async function(id) {
       const ok = confirm("Bu paper silinsin mi?");
       if (!ok) return;
@@ -421,22 +519,6 @@
         console.error(error);
       }
     };
-
-    function renderSimpleList(containerId, list, emptyText) {
-      const container = document.getElementById(containerId);
-
-      if (list.length === 0) {
-        container.innerHTML = `<div class="empty">${emptyText}</div>`;
-        return;
-      }
-
-      let html = "<ul>";
-      list.forEach(p => {
-        html += `<li>${p.subject} | ${p.year} | ${p.session} | ${p.tz} | ${p.paper}</li>`;
-      });
-      html += "</ul>";
-      container.innerHTML = html;
-    }
 
     function renderStats() {
       const total = papers.length;
@@ -473,7 +555,8 @@
         if (p.completed) subjectMap[p.subject].completed += 1;
       });
 
-      Object.entries(subjectMap).forEach(([subject, stats]) => {
+      Object.keys(subjectMap).sort().forEach(subject => {
+        const stats = subjectMap[subject];
         const percent = ((stats.completed / stats.total) * 100).toFixed(1);
 
         const div = document.createElement("div");
@@ -493,13 +576,13 @@
     function renderTodayList() {
       const today = getTodayDate();
       const todayPapers = papers.filter(p => p.completedDate === today);
-      renderSimpleList("todayList", todayPapers, "Bugün henüz tamamlanan paper yok.");
+      renderGroupedList("todayList", todayPapers, "Bugün henüz tamamlanan paper yok.");
     }
 
     function renderYesterdayList() {
       const yesterday = getYesterdayDate();
       const yesterdayPapers = papers.filter(p => p.completedDate === yesterday);
-      renderSimpleList("yesterdayList", yesterdayPapers, "Dün tamamlanan paper yok.");
+      renderGroupedList("yesterdayList", yesterdayPapers, "Dün tamamlanan paper yok.");
     }
 
     function renderWeekList() {
@@ -513,7 +596,7 @@
         return d >= weekAgo && d <= now;
       });
 
-      renderSimpleList("weekList", weekPapers, "Bu hafta tamamlanan paper yok.");
+      renderGroupedList("weekList", weekPapers, "Bu hafta tamamlanan paper yok.");
     }
 
     function renderMonthList() {
@@ -526,7 +609,7 @@
                d.getFullYear() === now.getFullYear();
       });
 
-      renderSimpleList("monthList", monthPapers, "Bu ay tamamlanan paper yok.");
+      renderGroupedList("monthList", monthPapers, "Bu ay tamamlanan paper yok.");
     }
 
     function renderTable() {
@@ -538,6 +621,8 @@
         filtered = filtered.filter(p => p.completed);
       } else if (currentFilter === "unfinished") {
         filtered = filtered.filter(p => !p.completed);
+      } else if (currentFilter === "repeat") {
+        filtered = filtered.filter(p => p.repeat);
       }
 
       if (filtered.length === 0) {
@@ -556,6 +641,7 @@
               <th>Paper</th>
               <th>Durum</th>
               <th>Tarih</th>
+              <th>Not</th>
               <th>İşlem</th>
             </tr>
           </thead>
@@ -565,22 +651,34 @@
       filtered.forEach(p => {
         html += `
           <tr>
-            <td data-label="Ders">${p.subject}</td>
-            <td data-label="Yıl">${p.year}</td>
-            <td data-label="Session">${p.session}</td>
-            <td data-label="TZ">${p.tz}</td>
-            <td data-label="Paper">${p.paper}</td>
+            <td data-label="Ders">${escapeHtml(p.subject)}</td>
+            <td data-label="Yıl">${escapeHtml(p.year)}</td>
+            <td data-label="Session">${escapeHtml(p.session)}</td>
+            <td data-label="TZ">${escapeHtml(p.tz)}</td>
+            <td data-label="Paper">
+              ${escapeHtml(p.paper)}
+              ${p.repeat ? '<div style="margin-top:6px;"><span class="badge badge-repeat">🔁 Repeat</span></div>' : ''}
+            </td>
             <td data-label="Durum">
               ${p.completed
                 ? '<span class="badge badge-done">BİTTİ</span>'
                 : '<span class="badge badge-notdone">BİTMEDİ</span>'}
             </td>
             <td data-label="Tarih">${p.completedDate || "-"}</td>
+            <td data-label="Not">
+              ${p.note && p.note.trim() !== "" ? `<div class="note-box">${escapeHtml(p.note)}</div>` : "-"}
+            </td>
             <td data-label="İşlem">
               <div class="actions-inline">
                 <button class="${p.completed ? "btn-secondary" : "btn-success"}"
-                        onclick="markCompleted('${p.id}', ${p.completed})">
-                  ${p.completed ? "Geri Al" : "Tamamlandı"}
+                        onclick="toggleCompleted('${p.id}', ${p.completed})">
+                  ${p.completed ? "Geri Al" : "Bitir"}
+                </button>
+                <button class="btn-warning" onclick="toggleRepeat('${p.id}', ${p.repeat})">
+                  ${p.repeat ? "Repeat Kaldır" : "Repeat Again"}
+                </button>
+                <button class="btn-primary" onclick="editNote('${p.id}', ${JSON.stringify(p.note || "")})">
+                  Not Düzenle
                 </button>
                 <button class="btn-danger" onclick="deletePaper('${p.id}')">Sil</button>
               </div>
