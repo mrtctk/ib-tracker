@@ -45,18 +45,13 @@
       grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
     }
 
-    input, select, textarea, button {
+    input, select, button {
       width: 100%;
       padding: 10px 12px;
       border-radius: 10px;
       border: 1px solid #d0d0d0;
       font-size: 14px;
       font-family: inherit;
-    }
-
-    textarea {
-      min-height: 90px;
-      resize: vertical;
     }
 
     button {
@@ -278,11 +273,6 @@
         </select>
 
         <input type="text" id="paper" placeholder="Paper (örn: Paper 1)">
-        <input type="text" id="score" placeholder="Score / Result (örn: 32/40 veya %78)">
-      </div>
-
-      <div style="margin-top: 12px;">
-        <textarea id="note" placeholder="Not (örn: Matematik TZ1 Paper 1'de 3. soru zordu)"></textarea>
       </div>
 
       <div style="margin-top:12px;">
@@ -467,8 +457,6 @@
       const session = document.getElementById("session").value;
       const tz = document.getElementById("tz").value;
       const paper = document.getElementById("paper").value.trim();
-      const score = document.getElementById("score").value.trim();
-      const note = document.getElementById("note").value.trim();
 
       if (!subject || !year || !session || !tz || !paper) {
         alert("Lütfen ders, yıl, session, TZ ve paper alanlarını doldur.");
@@ -482,8 +470,8 @@
           session,
           tz,
           paper,
-          score,
-          note,
+          score: "",
+          note: "",
           completed: false,
           completedDate: null,
           repeat: false,
@@ -495,8 +483,6 @@
         document.getElementById("session").value = "";
         document.getElementById("tz").value = "";
         document.getElementById("paper").value = "";
-        document.getElementById("score").value = "";
-        document.getElementById("note").value = "";
       } catch (error) {
         alert("Ekleme hatası: " + error.message);
         console.error(error);
