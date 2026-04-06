@@ -162,6 +162,15 @@
       margin-bottom: 18px;
     }
 
+    ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    li {
+      margin-bottom: 6px;
+    }
+
     @media (max-width: 700px) {
       table, thead, tbody, th, td, tr {
         display: block;
@@ -196,7 +205,7 @@
 <body>
   <div class="container">
     <h1>IB Past Paper Tracker</h1>
-    <p class="top-note">Bu sürüm Firebase ile senkronize çalışır. Aynı linki açan cihazlarda aynı veriler görünür.</p>
+    <p class="top-note">Telefon ve Mac arasında senkron çalışan IB tracker.</p>
 
     <div class="card">
       <h2>Yeni Past Paper Ekle</h2>
@@ -264,6 +273,21 @@
     </div>
 
     <div class="card">
+      <h2>Dün Çözdüklerin</h2>
+      <div id="yesterdayList"></div>
+    </div>
+
+    <div class="card">
+      <h2>Bu Hafta</h2>
+      <div id="weekList"></div>
+    </div>
+
+    <div class="card">
+      <h2>Bu Ay</h2>
+      <div id="monthList"></div>
+    </div>
+
+    <div class="card">
       <h2>Tüm Past Paperlar</h2>
       <div class="actions-inline" style="margin-bottom: 10px;">
         <button class="btn-secondary" onclick="setFilter('all')">Tümü</button>
@@ -313,6 +337,15 @@
       const year = now.getFullYear();
       const month = String(now.getMonth() + 1).padStart(2, "0");
       const day = String(now.getDate()).padStart(2, "0");
+      return `${year}-${month}-${day}`;
+    }
+
+    function getYesterdayDate() {
+      const d = new Date();
+      d.setDate(d.getDate() - 1);
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, "0");
+      const day = String(d.getDate()).padStart(2, "0");
       return `${year}-${month}-${day}`;
     }
 
@@ -389,6 +422,22 @@
       }
     };
 
+    function renderSimpleList(containerId, list, emptyText) {
+      const container = document.getElementById(containerId);
+
+      if (list.length === 0) {
+        container.innerHTML = `<div class="empty">${emptyText}</div>`;
+        return;
+      }
+
+      let html = "<ul>";
+      list.forEach(p => {
+        html += `<li>${p.subject} | ${p.year} | ${p.session} | ${p.tz} | ${p.paper}</li>`;
+      });
+      html += "</ul>";
+      container.innerHTML = html;
+    }
+
     function renderStats() {
       const total = papers.length;
       const completed = papers.filter(p => p.completed).length;
@@ -444,19 +493,40 @@
     function renderTodayList() {
       const today = getTodayDate();
       const todayPapers = papers.filter(p => p.completedDate === today);
-      const container = document.getElementById("todayList");
+      renderSimpleList("todayList", todayPapers, "Bugün henüz tamamlanan paper yok.");
+    }
 
-      if (todayPapers.length === 0) {
-        container.innerHTML = '<div class="empty">Bugün henüz tamamlanan paper yok.</div>';
-        return;
-      }
+    function renderYesterdayList() {
+      const yesterday = getYesterdayDate();
+      const yesterdayPapers = papers.filter(p => p.completedDate === yesterday);
+      renderSimpleList("yesterdayList", yesterdayPapers, "Dün tamamlanan paper yok.");
+    }
 
-      let html = "<ul>";
-      todayPapers.forEach(p => {
-        html += `<li>${p.subject} | ${p.year} | ${p.session} | ${p.tz} | ${p.paper}</li>`;
+    function renderWeekList() {
+      const now = new Date();
+      const weekAgo = new Date();
+      weekAgo.setDate(now.getDate() - 7);
+
+      const weekPapers = papers.filter(p => {
+        if (!p.completedDate) return false;
+        const d = new Date(p.completedDate);
+        return d >= weekAgo && d <= now;
       });
-      html += "</ul>";
-      container.innerHTML = html;
+
+      renderSimpleList("weekList", weekPapers, "Bu hafta tamamlanan paper yok.");
+    }
+
+    function renderMonthList() {
+      const now = new Date();
+
+      const monthPapers = papers.filter(p => {
+        if (!p.completedDate) return false;
+        const d = new Date(p.completedDate);
+        return d.getMonth() === now.getMonth() &&
+               d.getFullYear() === now.getFullYear();
+      });
+
+      renderSimpleList("monthList", monthPapers, "Bu ay tamamlanan paper yok.");
     }
 
     function renderTable() {
@@ -527,20 +597,27 @@
       renderStats();
       renderSubjectProgress();
       renderTodayList();
+      renderYesterdayList();
+      renderWeekList();
+      renderMonthList();
       renderTable();
     }
 
-    onSnapshot(papersQuery, (snapshot) => {
-      papers = snapshot.docs.map(docItem => ({
-        id: docItem.id,
-        ...docItem.data()
-      }));
-      renderAll();
-    }, (error) => {
-      console.error(error);
-      document.getElementById("paperTable").innerHTML =
-        `<div class="empty">Firestore bağlantı hatası: ${error.message}</div>`;
-    });
+    onSnapshot(
+      papersQuery,
+      (snapshot) => {
+        papers = snapshot.docs.map(docItem => ({
+          id: docItem.id,
+          ...docItem.data()
+        }));
+        renderAll();
+      },
+      (error) => {
+        console.error(error);
+        document.getElementById("paperTable").innerHTML =
+          `<div class="empty">Firestore bağlantı hatası: ${error.message}</div>`;
+      }
+    );
   </script>
 </body>
 </html>
