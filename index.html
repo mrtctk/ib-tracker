@@ -277,6 +277,14 @@
       display: block;
     }
 
+    .app-tab-content {
+      display: none;
+    }
+
+    .app-tab-content.active {
+      display: block;
+    }
+
     .ia-card {
       background: #fafafa;
       border: 1px solid #ececec;
@@ -323,152 +331,196 @@
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>IB Study Tracker</h1>
-    <p class="top-note">Past paper ve IA takibini tek yerde yap.</p>
+  <div class="container" id="authSection">
+    <div class="card" style="max-width:500px; margin:40px auto;">
+      <h1>IB Study Tracker</h1>
+      <p class="top-note">Kendi hesabınla giriş yap.</p>
 
-    <div class="tabs">
-      <button class="tab-btn active" onclick="switchTab('papersTab', this)">Past Papers</button>
-      <button class="tab-btn" onclick="switchTab('iaTab', this)">IA Tracker</button>
-    </div>
+      <div class="tabs">
+        <button class="tab-btn active" id="loginTabBtn" onclick="switchAuthTab('login', this)">Log In</button>
+        <button class="tab-btn" id="signupTabBtn" onclick="switchAuthTab('signup', this)">Sign Up</button>
+      </div>
 
-    <div id="papersTab" class="tab-content active">
-      <div class="card">
-        <h2>Yeni Past Paper Ekle</h2>
+      <div id="loginTab" class="tab-content active">
         <div class="grid grid-2">
-          <input type="text" id="subject" placeholder="Ders (örn: Physics HL)">
-          <input type="text" id="year" placeholder="Yıl (örn: 2023)">
-
-          <select id="session">
-            <option value="">Session seç</option>
-            <option value="May">May</option>
-            <option value="November">November</option>
-          </select>
-
-          <select id="tz">
-            <option value="">TZ seç</option>
-            <option value="TZ0">TZ0</option>
-            <option value="TZ1">TZ1</option>
-            <option value="TZ2">TZ2</option>
-            <option value="TZ3">TZ3</option>
-          </select>
-
-          <input type="text" id="paper" placeholder="Paper (örn: Paper 1)">
+          <input type="email" id="loginEmail" placeholder="Email">
+          <input type="password" id="loginPassword" placeholder="Şifre">
         </div>
-
         <div style="margin-top:12px;">
-          <button class="btn-primary" onclick="addPaper()">Past Paper Ekle</button>
+          <button class="btn-primary" onclick="logIn()">Log In</button>
         </div>
       </div>
 
-      <div class="grid grid-4">
-        <div class="card">
-          <h3>Toplam</h3>
-          <div class="stats" id="totalCount">0</div>
-        </div>
-        <div class="card">
-          <h3>Tamamlanan</h3>
-          <div class="stats" id="completedCount">0</div>
-        </div>
-        <div class="card">
-          <h3>Kalan</h3>
-          <div class="stats" id="remainingCount">0</div>
-        </div>
-        <div class="card">
-          <h3>Bugün</h3>
-          <div class="stats" id="todayCount">0</div>
-        </div>
-      </div>
-
-      <div class="card">
-        <h2>Genel İlerleme</h2>
-        <div id="progressText">%0.0</div>
-        <div class="progress-bar">
-          <div id="progressFill" class="progress-fill"></div>
-        </div>
-      </div>
-
-      <div class="card">
-        <h2>Ders Bazında İlerleme</h2>
-        <div id="subjectProgress" class="grid grid-2"></div>
-      </div>
-
-      <div class="card">
-        <h2>Bugün Çözdüklerin</h2>
-        <div id="todayList"></div>
-      </div>
-
-      <div class="card">
-        <h2>Dün Çözdüklerin</h2>
-        <div id="yesterdayList"></div>
-      </div>
-
-      <div class="card">
-        <h2>Bu Hafta</h2>
-        <div id="weekList"></div>
-      </div>
-
-      <div class="card">
-        <h2>Bu Ay</h2>
-        <div id="monthList"></div>
-      </div>
-
-      <div class="card">
-        <h2>Tüm Past Paperlar</h2>
-
-        <div class="search-row">
-          <input type="text" id="searchInput" placeholder="Ara... (örn: physics, tz2, 2023, paper 1, 32/40, zordu)" oninput="handleSearch()">
-        </div>
-
-        <div class="actions-inline" style="margin-bottom: 10px;">
-          <button class="btn-secondary" onclick="setFilter('all')">Tümü</button>
-          <button class="btn-success" onclick="setFilter('completed')">Tamamlananlar</button>
-          <button class="btn-danger" onclick="setFilter('unfinished')">Tamamlanmayanlar</button>
-          <button class="btn-warning" onclick="setFilter('repeat')">Repeat Olanlar</button>
-        </div>
-
-        <div id="paperTable"></div>
-      </div>
-    </div>
-
-    <div id="iaTab" class="tab-content">
-      <div class="card">
-        <h2>Yeni IA Ekle</h2>
+      <div id="signupTab" class="tab-content">
         <div class="grid grid-2">
-          <input type="text" id="iaSubject" placeholder="Ders (örn: Physics HL)">
-          <input type="text" id="iaTitle" placeholder="IA Başlığı / Konusu">
-
-          <select id="iaStatus">
-            <option value="">Durum seç</option>
-            <option value="Not Started">Not Started</option>
-            <option value="Research Question">Research Question</option>
-            <option value="Background Theory">Background Theory</option>
-            <option value="Methodology">Methodology</option>
-            <option value="Data Collection">Data Collection</option>
-            <option value="Processing">Processing</option>
-            <option value="Analysis">Analysis</option>
-            <option value="Conclusion">Conclusion</option>
-            <option value="Evaluation">Evaluation</option>
-            <option value="Final Draft">Final Draft</option>
-            <option value="Submitted">Submitted</option>
-            <option value="Completed">Completed</option>
-          </select>
-
-          <input type="date" id="iaDeadline">
+          <input type="text" id="signupName" placeholder="Kullanıcı adı">
+          <input type="email" id="signupEmail" placeholder="Email">
+          <input type="password" id="signupPassword" placeholder="Şifre">
+          <input type="password" id="signupPassword2" placeholder="Şifre tekrar">
         </div>
-
-        <div style="margin-top: 12px;">
-          <textarea id="iaNote" placeholder="IA hakkında not (örn: processed data kaldı)"></textarea>
-        </div>
-
         <div style="margin-top:12px;">
-          <button class="btn-primary" onclick="addIA()">IA Ekle</button>
+          <button class="btn-success" onclick="signUp()">Sign Up</button>
         </div>
       </div>
 
-      <div class="card">
-        <h2>IA Listesi</h2>
-        <div id="iaList" class="grid grid-3"></div>
+      <div id="authMessage" class="small" style="margin-top:14px;"></div>
+    </div>
+  </div>
+
+  <div id="appSection" style="display:none;">
+    <div class="container">
+      <h1>IB Study Tracker</h1>
+      <p class="top-note">Past paper ve IA takibini tek yerde yap.</p>
+
+      <div class="actions-inline" style="margin-bottom:16px;">
+        <button class="btn-secondary" onclick="logOut()">Çıkış Yap</button>
+      </div>
+
+      <div class="small" id="currentUserInfo" style="margin-bottom:16px;"></div>
+
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('papersTab', this)">Past Papers</button>
+        <button class="tab-btn" onclick="switchTab('iaTab', this)">IA Tracker</button>
+      </div>
+
+      <div id="papersTab" class="app-tab-content active">
+        <div class="card">
+          <h2>Yeni Past Paper Ekle</h2>
+          <div class="grid grid-2">
+            <input type="text" id="subject" placeholder="Ders (örn: Physics HL)">
+            <input type="text" id="year" placeholder="Yıl (örn: 2023)">
+
+            <select id="session">
+              <option value="">Session seç</option>
+              <option value="May">May</option>
+              <option value="November">November</option>
+            </select>
+
+            <select id="tz">
+              <option value="">TZ seç</option>
+              <option value="TZ0">TZ0</option>
+              <option value="TZ1">TZ1</option>
+              <option value="TZ2">TZ2</option>
+              <option value="TZ3">TZ3</option>
+            </select>
+
+            <input type="text" id="paper" placeholder="Paper (örn: Paper 1)">
+          </div>
+
+          <div style="margin-top:12px;">
+            <button class="btn-primary" onclick="addPaper()">Past Paper Ekle</button>
+          </div>
+        </div>
+
+        <div class="grid grid-4">
+          <div class="card">
+            <h3>Toplam</h3>
+            <div class="stats" id="totalCount">0</div>
+          </div>
+          <div class="card">
+            <h3>Tamamlanan</h3>
+            <div class="stats" id="completedCount">0</div>
+          </div>
+          <div class="card">
+            <h3>Kalan</h3>
+            <div class="stats" id="remainingCount">0</div>
+          </div>
+          <div class="card">
+            <h3>Bugün</h3>
+            <div class="stats" id="todayCount">0</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>Genel İlerleme</h2>
+          <div id="progressText">%0.0</div>
+          <div class="progress-bar">
+            <div id="progressFill" class="progress-fill"></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>Ders Bazında İlerleme</h2>
+          <div id="subjectProgress" class="grid grid-2"></div>
+        </div>
+
+        <div class="card">
+          <h2>Bugün Çözdüklerin</h2>
+          <div id="todayList"></div>
+        </div>
+
+        <div class="card">
+          <h2>Dün Çözdüklerin</h2>
+          <div id="yesterdayList"></div>
+        </div>
+
+        <div class="card">
+          <h2>Bu Hafta</h2>
+          <div id="weekList"></div>
+        </div>
+
+        <div class="card">
+          <h2>Bu Ay</h2>
+          <div id="monthList"></div>
+        </div>
+
+        <div class="card">
+          <h2>Tüm Past Paperlar</h2>
+
+          <div class="search-row">
+            <input type="text" id="searchInput" placeholder="Ara... (örn: physics, tz2, 2023, paper 1, 32/40, zordu)" oninput="handleSearch()">
+          </div>
+
+          <div class="actions-inline" style="margin-bottom: 10px;">
+            <button class="btn-secondary" onclick="setFilter('all')">Tümü</button>
+            <button class="btn-success" onclick="setFilter('completed')">Tamamlananlar</button>
+            <button class="btn-danger" onclick="setFilter('unfinished')">Tamamlanmayanlar</button>
+            <button class="btn-warning" onclick="setFilter('repeat')">Repeat Olanlar</button>
+          </div>
+
+          <div id="paperTable"></div>
+        </div>
+      </div>
+
+      <div id="iaTab" class="app-tab-content">
+        <div class="card">
+          <h2>Yeni IA Ekle</h2>
+          <div class="grid grid-2">
+            <input type="text" id="iaSubject" placeholder="Ders (örn: Physics HL)">
+            <input type="text" id="iaTitle" placeholder="IA Başlığı / Konusu">
+
+            <select id="iaStatus">
+              <option value="">Durum seç</option>
+              <option value="Not Started">Not Started</option>
+              <option value="Research Question">Research Question</option>
+              <option value="Background Theory">Background Theory</option>
+              <option value="Methodology">Methodology</option>
+              <option value="Data Collection">Data Collection</option>
+              <option value="Processing">Processing</option>
+              <option value="Analysis">Analysis</option>
+              <option value="Conclusion">Conclusion</option>
+              <option value="Evaluation">Evaluation</option>
+              <option value="Final Draft">Final Draft</option>
+              <option value="Submitted">Submitted</option>
+              <option value="Completed">Completed</option>
+            </select>
+
+            <input type="date" id="iaDeadline">
+          </div>
+
+          <div style="margin-top: 12px;">
+            <textarea id="iaNote" placeholder="IA hakkında not (örn: processed data kaldı)"></textarea>
+          </div>
+
+          <div style="margin-top:12px;">
+            <button class="btn-primary" onclick="addIA()">IA Ekle</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>IA Listesi</h2>
+          <div id="iaList" class="grid grid-3"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -485,8 +537,18 @@
       onSnapshot,
       query,
       orderBy,
-      serverTimestamp
+      serverTimestamp,
+      setDoc
     } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
+
+    import {
+      getAuth,
+      createUserWithEmailAndPassword,
+      signInWithEmailAndPassword,
+      signOut,
+      onAuthStateChanged,
+      updateProfile
+    } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCJy3O5GqABLuEi9pJ2C9yp_uxTL1NKbIU",
@@ -500,17 +562,32 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+    const auth = getAuth(app);
 
-    const papersRef = collection(db, "papers");
-    const papersQuery = query(papersRef, orderBy("createdAt", "desc"));
-
-    const iasRef = collection(db, "ias");
-    const iasQuery = query(iasRef, orderBy("createdAt", "desc"));
+    let currentUser = null;
+    let unsubscribePapers = null;
+    let unsubscribeIAs = null;
 
     let papers = [];
     let ias = [];
     let currentFilter = "all";
     let searchTerm = "";
+
+    function getUserPapersRef(uid) {
+      return collection(db, "users", uid, "papers");
+    }
+
+    function getUserIAsRef(uid) {
+      return collection(db, "users", uid, "ias");
+    }
+
+    function getUserPapersQuery(uid) {
+      return query(getUserPapersRef(uid), orderBy("createdAt", "desc"));
+    }
+
+    function getUserIAsQuery(uid) {
+      return query(getUserIAsRef(uid), orderBy("createdAt", "desc"));
+    }
 
     function getTodayDate() {
       const now = new Date();
@@ -596,9 +673,22 @@
       return combined.includes(searchTerm);
     }
 
+    window.switchAuthTab = function(tab, btn) {
+      document.querySelectorAll("#authSection .tab-content").forEach(el => el.classList.remove("active"));
+      document.querySelectorAll("#authSection .tab-btn").forEach(el => el.classList.remove("active"));
+
+      if (tab === "login") {
+        document.getElementById("loginTab").classList.add("active");
+      } else {
+        document.getElementById("signupTab").classList.add("active");
+      }
+
+      btn.classList.add("active");
+    };
+
     window.switchTab = function(tabId, btn) {
-      document.querySelectorAll(".tab-content").forEach(tab => tab.classList.remove("active"));
-      document.querySelectorAll(".tab-btn").forEach(button => button.classList.remove("active"));
+      document.querySelectorAll(".app-tab-content").forEach(tab => tab.classList.remove("active"));
+      document.querySelectorAll("#appSection .tab-btn").forEach(button => button.classList.remove("active"));
       document.getElementById(tabId).classList.add("active");
       btn.classList.add("active");
     };
@@ -613,6 +703,87 @@
       renderTable();
     };
 
+    window.signUp = async function() {
+      const name = document.getElementById("signupName").value.trim();
+      const email = document.getElementById("signupEmail").value.trim();
+      const password = document.getElementById("signupPassword").value;
+      const password2 = document.getElementById("signupPassword2").value;
+      const msg = document.getElementById("authMessage");
+
+      msg.textContent = "";
+
+      if (!name || !email || !password || !password2) {
+        msg.textContent = "Lütfen tüm alanları doldur.";
+        return;
+      }
+
+      if (password !== password2) {
+        msg.textContent = "Şifreler eşleşmiyor.";
+        return;
+      }
+
+      if (password.length < 6) {
+        msg.textContent = "Şifre en az 6 karakter olmalı.";
+        return;
+      }
+
+      try {
+        const cred = await createUserWithEmailAndPassword(auth, email, password);
+
+        await updateProfile(cred.user, {
+          displayName: name
+        });
+
+        await setDoc(doc(db, "users", cred.user.uid), {
+          displayName: name,
+          email: email,
+          createdAt: serverTimestamp()
+        });
+
+        msg.textContent = "Hesap oluşturuldu.";
+
+        document.getElementById("signupName").value = "";
+        document.getElementById("signupEmail").value = "";
+        document.getElementById("signupPassword").value = "";
+        document.getElementById("signupPassword2").value = "";
+      } catch (error) {
+        msg.textContent = "Kayıt hatası: " + error.message;
+        console.error(error);
+      }
+    };
+
+    window.logIn = async function() {
+      const email = document.getElementById("loginEmail").value.trim();
+      const password = document.getElementById("loginPassword").value;
+      const msg = document.getElementById("authMessage");
+
+      msg.textContent = "";
+
+      if (!email || !password) {
+        msg.textContent = "Email ve şifre gir.";
+        return;
+      }
+
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        msg.textContent = "";
+        document.getElementById("loginEmail").value = "";
+        document.getElementById("loginPassword").value = "";
+      } catch (error) {
+        msg.textContent = "Giriş hatası: " + error.message;
+        console.error(error);
+      }
+    };
+
+    window.logOut = async function() {
+      try {
+        await signOut(auth);
+      } catch (error) {
+        alert("Çıkış hatası: " + error.message);
+        console.error(error);
+      }
+    };
+
     window.addPaper = async function() {
       const subject = document.getElementById("subject").value.trim();
       const year = document.getElementById("year").value.trim();
@@ -625,8 +796,13 @@
         return;
       }
 
+      if (!currentUser) {
+        alert("Önce giriş yapmalısın.");
+        return;
+      }
+
       try {
-        await addDoc(papersRef, {
+        await addDoc(getUserPapersRef(currentUser.uid), {
           subject,
           year,
           session,
@@ -652,8 +828,13 @@
     };
 
     window.toggleCompleted = async function(id, currentCompleted) {
+      if (!currentUser) {
+        alert("Önce giriş yapmalısın.");
+        return;
+      }
+
       try {
-        const ref = doc(db, "papers", id);
+        const ref = doc(db, "users", currentUser.uid, "papers", id);
 
         if (currentCompleted) {
           await updateDoc(ref, {
@@ -673,8 +854,13 @@
     };
 
     window.toggleRepeat = async function(id, currentRepeat) {
+      if (!currentUser) {
+        alert("Önce giriş yapmalısın.");
+        return;
+      }
+
       try {
-        await updateDoc(doc(db, "papers", id), {
+        await updateDoc(doc(db, "users", currentUser.uid, "papers", id), {
           repeat: !currentRepeat
         });
       } catch (error) {
@@ -684,6 +870,11 @@
     };
 
     window.editNote = async function(id) {
+      if (!currentUser) {
+        alert("Önce giriş yapmalısın.");
+        return;
+      }
+
       const paper = papers.find(p => p.id === id);
       const currentNote = paper ? (paper.note || "") : "";
 
@@ -691,7 +882,7 @@
       if (newNote === null) return;
 
       try {
-        await updateDoc(doc(db, "papers", id), {
+        await updateDoc(doc(db, "users", currentUser.uid, "papers", id), {
           note: newNote.trim()
         });
       } catch (error) {
@@ -701,6 +892,11 @@
     };
 
     window.editScore = async function(id) {
+      if (!currentUser) {
+        alert("Önce giriş yapmalısın.");
+        return;
+      }
+
       const paper = papers.find(p => p.id === id);
       const currentScore = paper ? (paper.score || "") : "";
 
@@ -708,7 +904,7 @@
       if (newScore === null) return;
 
       try {
-        await updateDoc(doc(db, "papers", id), {
+        await updateDoc(doc(db, "users", currentUser.uid, "papers", id), {
           score: newScore.trim()
         });
       } catch (error) {
@@ -718,11 +914,16 @@
     };
 
     window.deletePaper = async function(id) {
+      if (!currentUser) {
+        alert("Önce giriş yapmalısın.");
+        return;
+      }
+
       const ok = confirm("Bu paper silinsin mi?");
       if (!ok) return;
 
       try {
-        await deleteDoc(doc(db, "papers", id));
+        await deleteDoc(doc(db, "users", currentUser.uid, "papers", id));
       } catch (error) {
         alert("Silme hatası: " + error.message);
         console.error(error);
@@ -741,8 +942,13 @@
         return;
       }
 
+      if (!currentUser) {
+        alert("Önce giriş yapmalısın.");
+        return;
+      }
+
       try {
-        await addDoc(iasRef, {
+        await addDoc(getUserIAsRef(currentUser.uid), {
           subject,
           title,
           status,
@@ -763,6 +969,11 @@
     };
 
     window.editIANote = async function(id) {
+      if (!currentUser) {
+        alert("Önce giriş yapmalısın.");
+        return;
+      }
+
       const ia = ias.find(item => item.id === id);
       const currentNote = ia ? (ia.note || "") : "";
 
@@ -770,7 +981,7 @@
       if (newNote === null) return;
 
       try {
-        await updateDoc(doc(db, "ias", id), {
+        await updateDoc(doc(db, "users", currentUser.uid, "ias", id), {
           note: newNote.trim()
         });
       } catch (error) {
@@ -780,6 +991,11 @@
     };
 
     window.editIAStatus = async function(id) {
+      if (!currentUser) {
+        alert("Önce giriş yapmalısın.");
+        return;
+      }
+
       const ia = ias.find(item => item.id === id);
       const currentStatus = ia ? (ia.status || "") : "";
 
@@ -787,7 +1003,7 @@
       if (newStatus === null) return;
 
       try {
-        await updateDoc(doc(db, "ias", id), {
+        await updateDoc(doc(db, "users", currentUser.uid, "ias", id), {
           status: newStatus.trim()
         });
       } catch (error) {
@@ -797,11 +1013,16 @@
     };
 
     window.deleteIA = async function(id) {
+      if (!currentUser) {
+        alert("Önce giriş yapmalısın.");
+        return;
+      }
+
       const ok = confirm("Bu IA silinsin mi?");
       if (!ok) return;
 
       try {
-        await deleteDoc(doc(db, "ias", id));
+        await deleteDoc(doc(db, "users", currentUser.uid, "ias", id));
       } catch (error) {
         alert("IA silme hatası: " + error.message);
         console.error(error);
@@ -1035,37 +1256,82 @@
       renderIAList();
     }
 
-    onSnapshot(
-      papersQuery,
-      (snapshot) => {
-        papers = snapshot.docs.map(docItem => ({
-          id: docItem.id,
-          ...docItem.data()
-        }));
-        renderAll();
-      },
-      (error) => {
-        console.error(error);
-        document.getElementById("paperTable").innerHTML =
-          `<div class="empty">Firestore bağlantı hatası: ${error.message}</div>`;
-      }
-    );
+    function clearUIData() {
+      papers = [];
+      ias = [];
+      renderAll();
+    }
 
-    onSnapshot(
-      iasQuery,
-      (snapshot) => {
-        ias = snapshot.docs.map(docItem => ({
-          id: docItem.id,
-          ...docItem.data()
-        }));
-        renderAll();
-      },
-      (error) => {
-        console.error(error);
-        document.getElementById("iaList").innerHTML =
-          `<div class="empty">IA bağlantı hatası: ${error.message}</div>`;
+    function stopListeners() {
+      if (unsubscribePapers) {
+        unsubscribePapers();
+        unsubscribePapers = null;
       }
-    );
+      if (unsubscribeIAs) {
+        unsubscribeIAs();
+        unsubscribeIAs = null;
+      }
+    }
+
+    function startListeners(uid) {
+      const papersQuery = getUserPapersQuery(uid);
+      const iasQuery = getUserIAsQuery(uid);
+
+      unsubscribePapers = onSnapshot(
+        papersQuery,
+        (snapshot) => {
+          papers = snapshot.docs.map(docItem => ({
+            id: docItem.id,
+            ...docItem.data()
+          }));
+          renderAll();
+        },
+        (error) => {
+          console.error(error);
+          document.getElementById("paperTable").innerHTML =
+            `<div class="empty">Firestore bağlantı hatası: ${error.message}</div>`;
+        }
+      );
+
+      unsubscribeIAs = onSnapshot(
+        iasQuery,
+        (snapshot) => {
+          ias = snapshot.docs.map(docItem => ({
+            id: docItem.id,
+            ...docItem.data()
+          }));
+          renderAll();
+        },
+        (error) => {
+          console.error(error);
+          document.getElementById("iaList").innerHTML =
+            `<div class="empty">IA bağlantı hatası: ${error.message}</div>`;
+        }
+      );
+    }
+
+    onAuthStateChanged(auth, (user) => {
+      currentUser = user;
+
+      if (user) {
+        document.getElementById("authSection").style.display = "none";
+        document.getElementById("appSection").style.display = "block";
+
+        const info = document.getElementById("currentUserInfo");
+        if (info) {
+          info.textContent = `Giriş yapan: ${user.email}`;
+        }
+
+        stopListeners();
+        startListeners(user.uid);
+      } else {
+        stopListeners();
+        clearUIData();
+
+        document.getElementById("appSection").style.display = "none";
+        document.getElementById("authSection").style.display = "block";
+      }
+    });
   </script>
 </body>
 </html>
