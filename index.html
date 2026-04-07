@@ -188,6 +188,11 @@
       color: #1d4ed8;
     }
 
+    .badge-completed {
+      background: #dcfce7;
+      color: #166534;
+    }
+
     .actions-inline {
       display: flex;
       gap: 6px;
@@ -217,6 +222,18 @@
       word-break: break-word;
       max-width: 100%;
       font-weight: bold;
+    }
+
+    .deadline-box {
+      margin-top: 6px;
+      padding: 8px 10px;
+      background: #fff7ed;
+      border-left: 4px solid #fb923c;
+      border-radius: 8px;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+      max-width: 100%;
     }
 
     .top-note {
@@ -270,14 +287,8 @@
     .ia-title {
       font-weight: bold;
       margin-bottom: 8px;
-    }
-
-    .deadline-box {
-      margin-top: 6px;
-      padding: 8px 10px;
-      background: #fff7ed;
-      border-left: 4px solid #fb923c;
-      border-radius: 8px;
+      overflow-wrap: anywhere;
+      word-break: break-word;
     }
 
     @media (max-width: 700px) {
@@ -440,6 +451,7 @@
             <option value="Evaluation">Evaluation</option>
             <option value="Final Draft">Final Draft</option>
             <option value="Submitted">Submitted</option>
+            <option value="Completed">Completed</option>
           </select>
 
           <input type="date" id="iaDeadline">
@@ -990,7 +1002,13 @@
         html += `
           <div class="ia-card">
             <div class="ia-title">${escapeHtml(ia.subject)} — ${escapeHtml(ia.title)}</div>
-            <div><span class="badge badge-ia">${escapeHtml(ia.status || "-")}</span></div>
+
+            <div>
+              <span class="badge ${ia.status === "Completed" ? "badge-completed" : "badge-ia"}">
+                ${escapeHtml(ia.status || "-")}
+              </span>
+            </div>
+
             ${ia.deadline ? `<div class="deadline-box">📅 Deadline: ${escapeHtml(ia.deadline)}</div>` : ""}
             ${ia.note && ia.note.trim() !== "" ? `<div class="note-box">📝 ${escapeHtml(ia.note)}</div>` : ""}
 
