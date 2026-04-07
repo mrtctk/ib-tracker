@@ -550,15 +550,16 @@
       updateProfile
     } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyCJy3O5GqABLuEi9pJ2C9yp_uxTL1NKbIU",
-      authDomain: "ib-tracker-3fa15.firebaseapp.com",
-      projectId: "ib-tracker-3fa15",
-      storageBucket: "ib-tracker-3fa15.firebasestorage.app",
-      messagingSenderId: "1084870933621",
-      appId: "1:1084870933621:web:42aaf1a1c273f2e6fb8c3c",
-      measurementId: "G-SHTVY448SY"
-    };
+   // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyCJy3O5GgABLuEi9pJ2C9yp_uxTl1NKbIU",
+  authDomain: "ib-tracker-3fa15.firebaseapp.com",
+  projectId: "ib-tracker-3fa15",
+  storageBucket: "ib-tracker-3fa15.firebasestorage.app",
+  messagingSenderId: "1084870933621",
+  appId: "1:1084870933621:web:42aaf1a1c273f2e6fb8c3c",
+  measurementId: "G-SHTVY448SY"
+};
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
