@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>IB Past Paper Tracker</title>
+  <title>IB Study Tracker</title>
   <style>
     * { box-sizing: border-box; }
 
@@ -41,17 +41,26 @@
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     }
 
+    .grid-3 {
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
+
     .grid-4 {
       grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
     }
 
-    input, select, button {
+    input, select, textarea, button {
       width: 100%;
       padding: 10px 12px;
       border-radius: 10px;
       border: 1px solid #d0d0d0;
       font-size: 14px;
       font-family: inherit;
+    }
+
+    textarea {
+      min-height: 90px;
+      resize: vertical;
     }
 
     button {
@@ -174,6 +183,11 @@
       color: #9a3412;
     }
 
+    .badge-ia {
+      background: #dbeafe;
+      color: #1d4ed8;
+    }
+
     .actions-inline {
       display: flex;
       gap: 6px;
@@ -215,6 +229,57 @@
       margin-bottom: 12px;
     }
 
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      width: auto;
+      padding: 12px 18px;
+      border-radius: 999px;
+      background: white;
+      border: 1px solid #d0d0d0;
+      color: #111;
+      font-weight: bold;
+    }
+
+    .tab-btn.active {
+      background: #2563eb;
+      color: white;
+      border-color: #2563eb;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .ia-card {
+      background: #fafafa;
+      border: 1px solid #ececec;
+      border-radius: 12px;
+      padding: 14px;
+    }
+
+    .ia-title {
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    .deadline-box {
+      margin-top: 6px;
+      padding: 8px 10px;
+      background: #fff7ed;
+      border-left: 4px solid #fb923c;
+      border-radius: 8px;
+    }
+
     @media (max-width: 700px) {
       table, thead, tbody, th, td, tr {
         display: block;
@@ -248,104 +313,151 @@
 </head>
 <body>
   <div class="container">
-    <h1>IB Past Paper Tracker</h1>
-    <p class="top-note">Telefon ve Mac arasında senkron çalışan çalışma takip sistemi.</p>
+    <h1>IB Study Tracker</h1>
+    <p class="top-note">Past paper ve IA takibini tek yerde yap.</p>
 
-    <div class="card">
-      <h2>Yeni Past Paper Ekle</h2>
-      <div class="grid grid-2">
-        <input type="text" id="subject" placeholder="Ders (örn: Physics HL)">
-        <input type="text" id="year" placeholder="Yıl (örn: 2023)">
-
-        <select id="session">
-          <option value="">Session seç</option>
-          <option value="May">May</option>
-          <option value="November">November</option>
-        </select>
-
-        <select id="tz">
-          <option value="">TZ seç</option>
-          <option value="TZ0">TZ0</option>
-          <option value="TZ1">TZ1</option>
-          <option value="TZ2">TZ2</option>
-          <option value="TZ3">TZ3</option>
-        </select>
-
-        <input type="text" id="paper" placeholder="Paper (örn: Paper 1)">
-      </div>
-
-      <div style="margin-top:12px;">
-        <button class="btn-primary" onclick="addPaper()">Past Paper Ekle</button>
-      </div>
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('papersTab', this)">Past Papers</button>
+      <button class="tab-btn" onclick="switchTab('iaTab', this)">IA Tracker</button>
     </div>
 
-    <div class="grid grid-4">
+    <div id="papersTab" class="tab-content active">
       <div class="card">
-        <h3>Toplam</h3>
-        <div class="stats" id="totalCount">0</div>
+        <h2>Yeni Past Paper Ekle</h2>
+        <div class="grid grid-2">
+          <input type="text" id="subject" placeholder="Ders (örn: Physics HL)">
+          <input type="text" id="year" placeholder="Yıl (örn: 2023)">
+
+          <select id="session">
+            <option value="">Session seç</option>
+            <option value="May">May</option>
+            <option value="November">November</option>
+          </select>
+
+          <select id="tz">
+            <option value="">TZ seç</option>
+            <option value="TZ0">TZ0</option>
+            <option value="TZ1">TZ1</option>
+            <option value="TZ2">TZ2</option>
+            <option value="TZ3">TZ3</option>
+          </select>
+
+          <input type="text" id="paper" placeholder="Paper (örn: Paper 1)">
+        </div>
+
+        <div style="margin-top:12px;">
+          <button class="btn-primary" onclick="addPaper()">Past Paper Ekle</button>
+        </div>
       </div>
+
+      <div class="grid grid-4">
+        <div class="card">
+          <h3>Toplam</h3>
+          <div class="stats" id="totalCount">0</div>
+        </div>
+        <div class="card">
+          <h3>Tamamlanan</h3>
+          <div class="stats" id="completedCount">0</div>
+        </div>
+        <div class="card">
+          <h3>Kalan</h3>
+          <div class="stats" id="remainingCount">0</div>
+        </div>
+        <div class="card">
+          <h3>Bugün</h3>
+          <div class="stats" id="todayCount">0</div>
+        </div>
+      </div>
+
       <div class="card">
-        <h3>Tamamlanan</h3>
-        <div class="stats" id="completedCount">0</div>
+        <h2>Genel İlerleme</h2>
+        <div id="progressText">%0.0</div>
+        <div class="progress-bar">
+          <div id="progressFill" class="progress-fill"></div>
+        </div>
       </div>
+
       <div class="card">
-        <h3>Kalan</h3>
-        <div class="stats" id="remainingCount">0</div>
+        <h2>Ders Bazında İlerleme</h2>
+        <div id="subjectProgress" class="grid grid-2"></div>
       </div>
+
       <div class="card">
-        <h3>Bugün</h3>
-        <div class="stats" id="todayCount">0</div>
+        <h2>Bugün Çözdüklerin</h2>
+        <div id="todayList"></div>
+      </div>
+
+      <div class="card">
+        <h2>Dün Çözdüklerin</h2>
+        <div id="yesterdayList"></div>
+      </div>
+
+      <div class="card">
+        <h2>Bu Hafta</h2>
+        <div id="weekList"></div>
+      </div>
+
+      <div class="card">
+        <h2>Bu Ay</h2>
+        <div id="monthList"></div>
+      </div>
+
+      <div class="card">
+        <h2>Tüm Past Paperlar</h2>
+
+        <div class="search-row">
+          <input type="text" id="searchInput" placeholder="Ara... (örn: physics, tz2, 2023, paper 1, 32/40, zordu)" oninput="handleSearch()">
+        </div>
+
+        <div class="actions-inline" style="margin-bottom: 10px;">
+          <button class="btn-secondary" onclick="setFilter('all')">Tümü</button>
+          <button class="btn-success" onclick="setFilter('completed')">Tamamlananlar</button>
+          <button class="btn-danger" onclick="setFilter('unfinished')">Tamamlanmayanlar</button>
+          <button class="btn-warning" onclick="setFilter('repeat')">Repeat Olanlar</button>
+        </div>
+
+        <div id="paperTable"></div>
       </div>
     </div>
 
-    <div class="card">
-      <h2>Genel İlerleme</h2>
-      <div id="progressText">%0.0</div>
-      <div class="progress-bar">
-        <div id="progressFill" class="progress-fill"></div>
-      </div>
-    </div>
+    <div id="iaTab" class="tab-content">
+      <div class="card">
+        <h2>Yeni IA Ekle</h2>
+        <div class="grid grid-2">
+          <input type="text" id="iaSubject" placeholder="Ders (örn: Physics HL)">
+          <input type="text" id="iaTitle" placeholder="IA Başlığı / Konusu">
 
-    <div class="card">
-      <h2>Ders Bazında İlerleme</h2>
-      <div id="subjectProgress" class="grid grid-2"></div>
-    </div>
+          <select id="iaStatus">
+            <option value="">Durum seç</option>
+            <option value="Not Started">Not Started</option>
+            <option value="Research Question">Research Question</option>
+            <option value="Background Theory">Background Theory</option>
+            <option value="Methodology">Methodology</option>
+            <option value="Data Collection">Data Collection</option>
+            <option value="Processing">Processing</option>
+            <option value="Analysis">Analysis</option>
+            <option value="Conclusion">Conclusion</option>
+            <option value="Evaluation">Evaluation</option>
+            <option value="Final Draft">Final Draft</option>
+            <option value="Submitted">Submitted</option>
+          </select>
 
-    <div class="card">
-      <h2>Bugün Çözdüklerin</h2>
-      <div id="todayList"></div>
-    </div>
+          <input type="date" id="iaDeadline">
+        </div>
 
-    <div class="card">
-      <h2>Dün Çözdüklerin</h2>
-      <div id="yesterdayList"></div>
-    </div>
+        <div style="margin-top: 12px;">
+          <textarea id="iaNote" placeholder="IA hakkında not (örn: processed data kaldı)"></textarea>
+        </div>
 
-    <div class="card">
-      <h2>Bu Hafta</h2>
-      <div id="weekList"></div>
-    </div>
-
-    <div class="card">
-      <h2>Bu Ay</h2>
-      <div id="monthList"></div>
-    </div>
-
-    <div class="card">
-      <h2>Tüm Past Paperlar</h2>
-
-      <div class="search-row">
-        <input type="text" id="searchInput" placeholder="Ara... (örn: physics, tz2, 2023, paper 1, 32/40, zordu)" oninput="handleSearch()">
+        <div style="margin-top:12px;">
+          <button class="btn-primary" onclick="addIA()">IA Ekle</button>
+        </div>
       </div>
 
-      <div class="actions-inline" style="margin-bottom: 10px;">
-        <button class="btn-secondary" onclick="setFilter('all')">Tümü</button>
-        <button class="btn-success" onclick="setFilter('completed')">Tamamlananlar</button>
-        <button class="btn-danger" onclick="setFilter('unfinished')">Tamamlanmayanlar</button>
-        <button class="btn-warning" onclick="setFilter('repeat')">Repeat Olanlar</button>
+      <div class="card">
+        <h2>IA Listesi</h2>
+        <div id="iaList" class="grid grid-3"></div>
       </div>
-
-      <div id="paperTable"></div>
     </div>
   </div>
 
@@ -380,7 +492,11 @@
     const papersRef = collection(db, "papers");
     const papersQuery = query(papersRef, orderBy("createdAt", "desc"));
 
+    const iasRef = collection(db, "ias");
+    const iasQuery = query(iasRef, orderBy("createdAt", "desc"));
+
     let papers = [];
+    let ias = [];
     let currentFilter = "all";
     let searchTerm = "";
 
@@ -467,6 +583,13 @@
 
       return combined.includes(searchTerm);
     }
+
+    window.switchTab = function(tabId, btn) {
+      document.querySelectorAll(".tab-content").forEach(tab => tab.classList.remove("active"));
+      document.querySelectorAll(".tab-btn").forEach(button => button.classList.remove("active"));
+      document.getElementById(tabId).classList.add("active");
+      btn.classList.add("active");
+    };
 
     window.handleSearch = function() {
       searchTerm = document.getElementById("searchInput").value.trim().toLowerCase();
@@ -590,6 +713,85 @@
         await deleteDoc(doc(db, "papers", id));
       } catch (error) {
         alert("Silme hatası: " + error.message);
+        console.error(error);
+      }
+    };
+
+    window.addIA = async function() {
+      const subject = document.getElementById("iaSubject").value.trim();
+      const title = document.getElementById("iaTitle").value.trim();
+      const status = document.getElementById("iaStatus").value;
+      const deadline = document.getElementById("iaDeadline").value;
+      const note = document.getElementById("iaNote").value.trim();
+
+      if (!subject || !title || !status) {
+        alert("Lütfen ders, IA başlığı ve durum alanlarını doldur.");
+        return;
+      }
+
+      try {
+        await addDoc(iasRef, {
+          subject,
+          title,
+          status,
+          deadline,
+          note,
+          createdAt: serverTimestamp()
+        });
+
+        document.getElementById("iaSubject").value = "";
+        document.getElementById("iaTitle").value = "";
+        document.getElementById("iaStatus").value = "";
+        document.getElementById("iaDeadline").value = "";
+        document.getElementById("iaNote").value = "";
+      } catch (error) {
+        alert("IA ekleme hatası: " + error.message);
+        console.error(error);
+      }
+    };
+
+    window.editIANote = async function(id) {
+      const ia = ias.find(item => item.id === id);
+      const currentNote = ia ? (ia.note || "") : "";
+
+      const newNote = prompt("Yeni IA notunu gir:", currentNote);
+      if (newNote === null) return;
+
+      try {
+        await updateDoc(doc(db, "ias", id), {
+          note: newNote.trim()
+        });
+      } catch (error) {
+        alert("IA not güncelleme hatası: " + error.message);
+        console.error(error);
+      }
+    };
+
+    window.editIAStatus = async function(id) {
+      const ia = ias.find(item => item.id === id);
+      const currentStatus = ia ? (ia.status || "") : "";
+
+      const newStatus = prompt("Yeni IA durumunu gir:", currentStatus);
+      if (newStatus === null) return;
+
+      try {
+        await updateDoc(doc(db, "ias", id), {
+          status: newStatus.trim()
+        });
+      } catch (error) {
+        alert("IA durum güncelleme hatası: " + error.message);
+        console.error(error);
+      }
+    };
+
+    window.deleteIA = async function(id) {
+      const ok = confirm("Bu IA silinsin mi?");
+      if (!ok) return;
+
+      try {
+        await deleteDoc(doc(db, "ias", id));
+      } catch (error) {
+        alert("IA silme hatası: " + error.message);
         console.error(error);
       }
     };
@@ -774,6 +976,36 @@
       container.innerHTML = html;
     }
 
+    function renderIAList() {
+      const container = document.getElementById("iaList");
+
+      if (ias.length === 0) {
+        container.innerHTML = '<div class="empty">Henüz IA eklenmedi.</div>';
+        return;
+      }
+
+      let html = "";
+
+      ias.forEach(ia => {
+        html += `
+          <div class="ia-card">
+            <div class="ia-title">${escapeHtml(ia.subject)} — ${escapeHtml(ia.title)}</div>
+            <div><span class="badge badge-ia">${escapeHtml(ia.status || "-")}</span></div>
+            ${ia.deadline ? `<div class="deadline-box">📅 Deadline: ${escapeHtml(ia.deadline)}</div>` : ""}
+            ${ia.note && ia.note.trim() !== "" ? `<div class="note-box">📝 ${escapeHtml(ia.note)}</div>` : ""}
+
+            <div class="actions-inline" style="margin-top: 10px;">
+              <button class="btn-primary" onclick="editIAStatus('${ia.id}')">Durum Düzenle</button>
+              <button class="btn-secondary" onclick="editIANote('${ia.id}')">Not Düzenle</button>
+              <button class="btn-danger" onclick="deleteIA('${ia.id}')">Sil</button>
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
     function renderAll() {
       renderStats();
       renderSubjectProgress();
@@ -782,6 +1014,7 @@
       renderWeekList();
       renderMonthList();
       renderTable();
+      renderIAList();
     }
 
     onSnapshot(
@@ -797,6 +1030,22 @@
         console.error(error);
         document.getElementById("paperTable").innerHTML =
           `<div class="empty">Firestore bağlantı hatası: ${error.message}</div>`;
+      }
+    );
+
+    onSnapshot(
+      iasQuery,
+      (snapshot) => {
+        ias = snapshot.docs.map(docItem => ({
+          id: docItem.id,
+          ...docItem.data()
+        }));
+        renderAll();
+      },
+      (error) => {
+        console.error(error);
+        document.getElementById("iaList").innerHTML =
+          `<div class="empty">IA bağlantı hatası: ${error.message}</div>`;
       }
     );
   </script>
