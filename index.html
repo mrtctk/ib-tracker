@@ -1,1390 +1,495 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>IB Study Tracker</title>
-  <style>
-    * { box-sizing: border-box; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gym Tracker</title>
 
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f5f5f5;
-      color: #111;
-    }
-
-    .container {
-      max-width: 1200px;
-      margin: 30px auto;
-      padding: 20px;
-    }
-
-    h1, h2, h3 {
-      margin-top: 0;
-    }
-
-    .card {
-      background: white;
-      padding: 18px;
-      margin-bottom: 18px;
-      border-radius: 14px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-    }
-
-    .grid {
-      display: grid;
-      gap: 12px;
-    }
-
-    .grid-2 {
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    }
-
-    .grid-3 {
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    }
-
-    .grid-4 {
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    }
-
-    input, select, textarea, button {
-      width: 100%;
-      padding: 10px 12px;
-      border-radius: 10px;
-      border: 1px solid #d0d0d0;
-      font-size: 14px;
-      font-family: inherit;
-    }
-
-    textarea {
-      min-height: 90px;
-      resize: vertical;
-    }
-
-    button {
-      cursor: pointer;
-      border: none;
-    }
-
-    .btn-primary { background: #2563eb; color: white; }
-    .btn-success { background: #16a34a; color: white; }
-    .btn-danger { background: #dc2626; color: white; }
-    .btn-secondary { background: #6b7280; color: white; }
-    .btn-warning { background: #ea580c; color: white; }
-    .btn-score { background: #7c3aed; color: white; }
-
-    .stats {
-      font-size: 22px;
-      font-weight: bold;
-    }
-
-    .progress-bar {
-      width: 100%;
-      height: 18px;
-      background: #e5e7eb;
-      border-radius: 999px;
-      overflow: hidden;
-      margin-top: 10px;
-    }
-
-    .progress-fill {
-      height: 100%;
-      background: #2563eb;
-      width: 0%;
-    }
-
-    .subject-box {
-      padding: 12px;
-      border-radius: 12px;
-      background: #f9fafb;
-      border: 1px solid #e5e7eb;
-      overflow-wrap: anywhere;
-      word-break: break-word;
-    }
-
-    .small {
-      font-size: 13px;
-      color: #666;
-    }
-
-    .empty {
-      color: #777;
-      padding: 10px 0;
-    }
-
-    .section-block {
-      margin-bottom: 18px;
-      padding: 12px;
-      border-radius: 12px;
-      background: #fafafa;
-      border: 1px solid #ececec;
-    }
-
-    .section-block h3 {
-      margin-bottom: 8px;
-    }
-
-    ul {
-      margin: 0;
-      padding-left: 18px;
-    }
-
-    li {
-      margin-bottom: 6px;
-      overflow-wrap: anywhere;
-      word-break: break-word;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 12px;
-      table-layout: fixed;
-    }
-
-    th, td {
-      text-align: left;
-      padding: 12px 10px;
-      border-bottom: 1px solid #ececec;
-      vertical-align: top;
-      overflow-wrap: anywhere;
-      word-break: break-word;
-      white-space: normal;
-    }
-
-    th {
-      background: #f9fafb;
-    }
-
-    .badge {
-      display: inline-block;
-      padding: 5px 10px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: bold;
-      margin-right: 6px;
-      margin-bottom: 4px;
-    }
-
-    .badge-done {
-      background: #dcfce7;
-      color: #166534;
-    }
-
-    .badge-notdone {
-      background: #fee2e2;
-      color: #991b1b;
-    }
-
-    .badge-repeat {
-      background: #ffedd5;
-      color: #9a3412;
-    }
-
-    .badge-ia {
-      background: #dbeafe;
-      color: #1d4ed8;
-    }
-
-    .badge-completed {
-      background: #dcfce7;
-      color: #166534;
-    }
-
-    .actions-inline {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-    }
-
-    .note-box {
-      margin-top: 6px;
-      padding: 8px 10px;
-      background: #f9fafb;
-      border-left: 4px solid #cbd5e1;
-      border-radius: 8px;
-      white-space: pre-wrap;
-      overflow-wrap: anywhere;
-      word-break: break-word;
-      max-width: 100%;
-    }
-
-    .score-box {
-      margin-top: 6px;
-      padding: 8px 10px;
-      background: #f5f3ff;
-      border-left: 4px solid #a78bfa;
-      border-radius: 8px;
-      white-space: pre-wrap;
-      overflow-wrap: anywhere;
-      word-break: break-word;
-      max-width: 100%;
-      font-weight: bold;
-    }
-
-    .deadline-box {
-      margin-top: 6px;
-      padding: 8px 10px;
-      background: #fff7ed;
-      border-left: 4px solid #fb923c;
-      border-radius: 8px;
-      white-space: pre-wrap;
-      overflow-wrap: anywhere;
-      word-break: break-word;
-      max-width: 100%;
-    }
-
-    .top-note {
-      color: #555;
-      margin-top: -6px;
-      margin-bottom: 18px;
-    }
-
-    .search-row {
-      margin-bottom: 12px;
-    }
-
-    .tabs {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
-    }
-
-    .tab-btn {
-      width: auto;
-      padding: 12px 18px;
-      border-radius: 999px;
-      background: white;
-      border: 1px solid #d0d0d0;
-      color: #111;
-      font-weight: bold;
-    }
-
-    .tab-btn.active {
-      background: #2563eb;
-      color: white;
-      border-color: #2563eb;
-    }
-
-    .tab-content {
-      display: none;
-    }
-
-    .tab-content.active {
-      display: block;
-    }
-
-    .app-tab-content {
-      display: none;
-    }
-
-    .app-tab-content.active {
-      display: block;
-    }
-
-    .ia-card {
-      background: #fafafa;
-      border: 1px solid #ececec;
-      border-radius: 12px;
-      padding: 14px;
-    }
-
-    .ia-title {
-      font-weight: bold;
-      margin-bottom: 8px;
-      overflow-wrap: anywhere;
-      word-break: break-word;
-    }
-
-    @media (max-width: 700px) {
-      table, thead, tbody, th, td, tr {
-        display: block;
-      }
-
-      thead {
-        display: none;
-      }
-
-      tr {
-        background: white;
-        margin-bottom: 12px;
-        border: 1px solid #e5e7eb;
-        border-radius: 12px;
-        padding: 10px;
-      }
-
-      td {
-        border: none;
-        padding: 8px 0;
-      }
-
-      td::before {
-        content: attr(data-label);
-        font-weight: bold;
-        display: block;
-        margin-bottom: 4px;
-      }
-    }
-  </style>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f5f5f5;color:#111}
+.container{max-width:1200px;margin:30px auto;padding:20px}
+.card{background:white;padding:18px;margin-bottom:18px;border-radius:14px;box-shadow:0 4px 12px rgba(0,0,0,.06)}
+.grid{display:grid;gap:12px}
+.grid-2{grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.grid-3{grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+input,select,textarea,button{width:100%;padding:10px 12px;border-radius:10px;border:1px solid #d0d0d0;font-size:14px;font-family:inherit}
+textarea{min-height:80px;resize:vertical}
+button{cursor:pointer;border:none;margin-top:8px}
+.btn{background:#2563eb;color:white}
+.btn-green{background:#16a34a;color:white}
+.btn-red{background:#dc2626;color:white}
+.btn-gray{background:#6b7280;color:white}
+.hidden{display:none}
+.tabs{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap}
+.tab-btn{width:auto;padding:12px 18px;border-radius:999px;background:white;border:1px solid #d0d0d0;color:#111;font-weight:bold}
+.tab-btn.active{background:#2563eb;color:white;border-color:#2563eb}
+.tab-content{display:none}
+.tab-content.active{display:block}
+.badge{display:inline-block;padding:5px 10px;border-radius:999px;font-size:12px;font-weight:bold;margin:4px 4px 4px 0}
+.badge-blue{background:#dbeafe;color:#1d4ed8}
+.badge-green{background:#dcfce7;color:#166534}
+.badge-orange{background:#ffedd5;color:#9a3412}
+.exercise{border:1px solid #e5e7eb;background:#fafafa;border-radius:12px;padding:12px;margin-bottom:10px}
+.note{margin-top:6px;padding:8px 10px;background:#f9fafb;border-left:4px solid #cbd5e1;border-radius:8px;white-space:pre-wrap;overflow-wrap:anywhere}
+.small{font-size:13px;color:#666}
+.stat{font-size:24px;font-weight:bold}
+.check-row{display:flex;align-items:center;gap:10px;margin:8px 0}
+.check-row input{width:auto}
+</style>
 </head>
+
 <body>
-  <div class="container" id="authSection">
-    <div class="card" style="max-width:500px; margin:40px auto;">
-      <h1>IB Study Tracker</h1>
-      <p class="top-note">Kendi hesabınla giriş yap.</p>
+<div class="container">
+<h1>Gym Tracker</h1>
+<p class="small">Programına bağlı antrenman, beslenme ve gelişim takip sistemi.</p>
 
-      <div class="tabs">
-        <button class="tab-btn active" id="loginTabBtn" onclick="switchAuthTab('login', this)">Log In</button>
-        <button class="tab-btn" id="signupTabBtn" onclick="switchAuthTab('signup', this)">Sign Up</button>
-      </div>
+<div id="authBox" class="card">
+<h2>Login / Sign Up</h2>
+<input id="email" placeholder="Email">
+<input id="password" type="password" placeholder="Password">
+<button class="btn" onclick="signUp()">Sign Up</button>
+<button class="btn-gray" onclick="login()">Login</button>
+</div>
 
-      <div id="loginTab" class="tab-content active">
-        <div class="grid grid-2">
-          <input type="email" id="loginEmail" placeholder="Email">
-          <input type="password" id="loginPassword" placeholder="Şifre">
-        </div>
+<div id="app" class="hidden">
+<div class="card">
+<p>Hoş geldin: <b id="userEmail"></b></p>
+<button class="btn-gray" onclick="logout()">Çıkış</button>
+</div>
 
-        <div style="margin-top:12px;">
-          <button class="btn-primary" onclick="logIn()">Log In</button>
-        </div>
+<div class="tabs">
+<button class="tab-btn active" onclick="switchTab('programTab', this)">Program</button>
+<button class="tab-btn" onclick="switchTab('workoutTab', this)">Workout Log</button>
+<button class="tab-btn" onclick="switchTab('nutritionTab', this)">Nutrition</button>
+<button class="tab-btn" onclick="switchTab('progressTab', this)">Progress</button>
+</div>
 
-        <div style="margin-top:10px;">
-          <button class="btn-secondary" onclick="forgotPassword()">Şifremi Unuttum</button>
-        </div>
-      </div>
+<div id="programTab" class="tab-content active">
+<div class="card">
+<h2>Programım</h2>
+<div id="programList"></div>
+</div>
+</div>
 
-      <div id="signupTab" class="tab-content">
-        <div class="grid grid-2">
-          <input type="text" id="signupName" placeholder="Kullanıcı adı">
-          <input type="email" id="signupEmail" placeholder="Email">
-          <input type="password" id="signupPassword" placeholder="Şifre">
-          <input type="password" id="signupPassword2" placeholder="Şifre tekrar">
-        </div>
+<div id="workoutTab" class="tab-content">
+<div class="card">
+<h2>Bugünkü Antrenman</h2>
+<div class="grid grid-2">
+<select id="workoutDay" onchange="renderWorkoutForm()">
+<option value="">Gün seç</option>
+<option value="Upper Day">Upper Day</option>
+<option value="Lower Day">Lower Day</option>
+<option value="Push Day">Push Day</option>
+<option value="Pull Day">Pull Day</option>
+<option value="Leg Day">Leg Day</option>
+</select>
+<input id="workoutDate" type="date">
+</div>
+<div id="workoutForm" style="margin-top:15px"></div>
+<button class="btn-green" onclick="saveWorkout()">Antrenmanı Kaydet</button>
+</div>
 
-        <div style="margin-top:12px;">
-          <button class="btn-success" onclick="signUp()">Sign Up</button>
-        </div>
-      </div>
+<div class="card">
+<h2>Geçmiş Antrenmanlar</h2>
+<div id="workoutHistory"></div>
+</div>
+</div>
 
-      <div id="authMessage" class="small" style="margin-top:14px;"></div>
-    </div>
-  </div>
+<div id="nutritionTab" class="tab-content">
+<div class="card">
+<h2>Günlük Beslenme Takibi</h2>
+<input id="nutritionDate" type="date">
+<div id="nutritionChecklist"></div>
+<textarea id="nutritionNote" placeholder="Beslenme notu"></textarea>
+<button class="btn-green" onclick="saveNutrition()">Beslenmeyi Kaydet</button>
+</div>
 
-  <div id="appSection" style="display:none;">
-    <div class="container">
-      <h1>IB Study Tracker</h1>
-      <p class="top-note">Past paper ve IA takibini tek yerde yap.</p>
+<div class="card">
+<h2>Beslenme Geçmişi</h2>
+<div id="nutritionHistory"></div>
+</div>
+</div>
 
-      <div class="actions-inline" style="margin-bottom:16px;">
-        <button class="btn-secondary" onclick="logOut()">Çıkış Yap</button>
-      </div>
+<div id="progressTab" class="tab-content">
+<div class="grid grid-3">
+<div class="card">
+<h3>Bu Hafta Antrenman</h3>
+<div class="stat" id="weeklyWorkoutCount">0</div>
+</div>
+<div class="card">
+<h3>Son Antrenman</h3>
+<div class="stat" id="lastWorkout">-</div>
+</div>
+<div class="card">
+<h3>Toplam Volume</h3>
+<div class="stat" id="totalVolume">0</div>
+</div>
+</div>
 
-      <div class="small" id="currentUserInfo" style="margin-bottom:16px;"></div>
+<div class="card">
+<h2>Vücut Ağırlığı Kaydı</h2>
+<div class="grid grid-2">
+<input id="bodyDate" type="date">
+<input id="bodyWeight" placeholder="Kilo örn: 78.5">
+</div>
+<textarea id="bodyNote" placeholder="Not"></textarea>
+<button class="btn" onclick="saveBodyProgress()">Kaydet</button>
+</div>
 
-      <div class="tabs">
-        <button class="tab-btn active" onclick="switchTab('papersTab', this)">Past Papers</button>
-        <button class="tab-btn" onclick="switchTab('iaTab', this)">IA Tracker</button>
-      </div>
+<div class="card">
+<h2>Body Progress Geçmişi</h2>
+<div id="bodyHistory"></div>
+</div>
+</div>
 
-      <div id="papersTab" class="app-tab-content active">
-        <div class="card">
-          <h2>Yeni Past Paper Ekle</h2>
-          <div class="grid grid-2">
-            <input type="text" id="subject" placeholder="Ders (örn: Physics HL)">
-            <input type="text" id="year" placeholder="Yıl (örn: 2023)">
+</div>
+</div>
 
-            <select id="session">
-              <option value="">Session seç</option>
-              <option value="May">May</option>
-              <option value="November">November</option>
-            </select>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+import {
+getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword,
+signOut, onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
+import {
+getFirestore, collection, addDoc, deleteDoc, doc, onSnapshot, query, serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
 
-            <select id="tz">
-              <option value="">TZ seç</option>
-              <option value="TZ0">TZ0</option>
-              <option value="TZ1">TZ1</option>
-              <option value="TZ2">TZ2</option>
-              <option value="TZ3">TZ3</option>
-            </select>
-
-            <input type="text" id="paper" placeholder="Paper (örn: Paper 1)">
-          </div>
-
-          <div style="margin-top:12px;">
-            <button class="btn-primary" onclick="addPaper()">Past Paper Ekle</button>
-          </div>
-        </div>
-
-        <div class="grid grid-4">
-          <div class="card">
-            <h3>Toplam</h3>
-            <div class="stats" id="totalCount">0</div>
-          </div>
-          <div class="card">
-            <h3>Tamamlanan</h3>
-            <div class="stats" id="completedCount">0</div>
-          </div>
-          <div class="card">
-            <h3>Kalan</h3>
-            <div class="stats" id="remainingCount">0</div>
-          </div>
-          <div class="card">
-            <h3>Bugün</h3>
-            <div class="stats" id="todayCount">0</div>
-          </div>
-        </div>
-
-        <div class="card">
-          <h2>Genel İlerleme</h2>
-          <div id="progressText">%0.0</div>
-          <div class="progress-bar">
-            <div id="progressFill" class="progress-fill"></div>
-          </div>
-        </div>
-
-        <div class="card">
-          <h2>Ders Bazında İlerleme</h2>
-          <div id="subjectProgress" class="grid grid-2"></div>
-        </div>
-
-        <div class="card">
-          <h2>Bugün Çözdüklerin</h2>
-          <div id="todayList"></div>
-        </div>
-
-        <div class="card">
-          <h2>Dün Çözdüklerin</h2>
-          <div id="yesterdayList"></div>
-        </div>
-
-        <div class="card">
-          <h2>Bu Hafta</h2>
-          <div id="weekList"></div>
-        </div>
-
-        <div class="card">
-          <h2>Bu Ay</h2>
-          <div id="monthList"></div>
-        </div>
-
-        <div class="card">
-          <h2>Tüm Past Paperlar</h2>
-
-          <div class="search-row">
-            <input type="text" id="searchInput" placeholder="Ara... (örn: physics, tz2, 2023, paper 1, 32/40, zordu)" oninput="handleSearch()">
-          </div>
-
-          <div class="actions-inline" style="margin-bottom: 10px;">
-            <button class="btn-secondary" onclick="setFilter('all')">Tümü</button>
-            <button class="btn-success" onclick="setFilter('completed')">Tamamlananlar</button>
-            <button class="btn-danger" onclick="setFilter('unfinished')">Tamamlanmayanlar</button>
-            <button class="btn-warning" onclick="setFilter('repeat')">Repeat Olanlar</button>
-          </div>
-
-          <div id="paperTable"></div>
-        </div>
-      </div>
-
-      <div id="iaTab" class="app-tab-content">
-        <div class="card">
-          <h2>Yeni IA Ekle</h2>
-          <div class="grid grid-2">
-            <input type="text" id="iaSubject" placeholder="Ders (örn: Physics HL)">
-            <input type="text" id="iaTitle" placeholder="IA Başlığı / Konusu">
-
-            <select id="iaStatus">
-              <option value="">Durum seç</option>
-              <option value="Not Started">Not Started</option>
-              <option value="Research Question">Research Question</option>
-              <option value="Background Theory">Background Theory</option>
-              <option value="Methodology">Methodology</option>
-              <option value="Data Collection">Data Collection</option>
-              <option value="Processing">Processing</option>
-              <option value="Analysis">Analysis</option>
-              <option value="Conclusion">Conclusion</option>
-              <option value="Evaluation">Evaluation</option>
-              <option value="Final Draft">Final Draft</option>
-              <option value="Submitted">Submitted</option>
-              <option value="Completed">Completed</option>
-            </select>
-
-            <input type="date" id="iaDeadline">
-          </div>
-
-          <div style="margin-top: 12px;">
-            <textarea id="iaNote" placeholder="IA hakkında not (örn: processed data kaldı)"></textarea>
-          </div>
-
-          <div style="margin-top:12px;">
-            <button class="btn-primary" onclick="addIA()">IA Ekle</button>
-          </div>
-        </div>
-
-        <div class="card">
-          <h2>IA Listesi</h2>
-          <div id="iaList" class="grid grid-3"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
-    import {
-      getFirestore,
-      collection,
-      addDoc,
-      updateDoc,
-      deleteDoc,
-      doc,
-      onSnapshot,
-      query,
-      orderBy,
-      serverTimestamp,
-      setDoc
-    } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
-
-    import {
-      getAuth,
-      createUserWithEmailAndPassword,
-      signInWithEmailAndPassword,
-      signOut,
-      onAuthStateChanged,
-      updateProfile,
-      sendPasswordResetEmail
-    } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
-
-    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyCJy3O5GgABLuEi9pJ2C9yp_uxTl1NKbIU",
+  apiKey: "BURAYA_API_KEY_YAZ",
   authDomain: "ib-tracker-3fa15.firebaseapp.com",
   projectId: "ib-tracker-3fa15",
   storageBucket: "ib-tracker-3fa15.firebasestorage.app",
   messagingSenderId: "1084870933621",
-  appId: "1:1084870933621:web:42aaf1a1c273f2e6fb8c3c",
-  measurementId: "G-SHTVY448SY"
+  appId: "1:1084870933621:web:42aaf1a1c273f2e6fb8c3c"
 };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    const auth = getAuth(app);
-
-    let currentUser = null;
-    let unsubscribePapers = null;
-    let unsubscribeIAs = null;
-
-    let papers = [];
-    let ias = [];
-    let currentFilter = "all";
-    let searchTerm = "";
-
-    const IA_STATUS_OPTIONS = [
-      "Not Started",
-      "Research Question",
-      "Background Theory",
-      "Methodology",
-      "Data Collection",
-      "Processing",
-      "Analysis",
-      "Conclusion",
-      "Evaluation",
-      "Final Draft",
-      "Submitted",
-      "Completed"
-    ];
-
-    function getUserPapersRef(uid) {
-      return collection(db, "users", uid, "papers");
-    }
-
-    function getUserIAsRef(uid) {
-      return collection(db, "users", uid, "ias");
-    }
-
-    function getUserPapersQuery(uid) {
-      return query(getUserPapersRef(uid), orderBy("createdAt", "desc"));
-    }
-
-    function getUserIAsQuery(uid) {
-      return query(getUserIAsRef(uid), orderBy("createdAt", "desc"));
-    }
-
-    function getTodayDate() {
-      const now = new Date();
-      const year = now.getFullYear();
-      const month = String(now.getMonth() + 1).padStart(2, "0");
-      const day = String(now.getDate()).padStart(2, "0");
-      return `${year}-${month}-${day}`;
-    }
-
-    function getYesterdayDate() {
-      const d = new Date();
-      d.setDate(d.getDate() - 1);
-      const year = d.getFullYear();
-      const month = String(d.getMonth() + 1).padStart(2, "0");
-      const day = String(d.getDate()).padStart(2, "0");
-      return `${year}-${month}-${day}`;
-    }
-
-    function groupBySubject(list) {
-      const grouped = {};
-      list.forEach(item => {
-        if (!grouped[item.subject]) grouped[item.subject] = [];
-        grouped[item.subject].push(item);
-      });
-      return grouped;
-    }
-
-    function renderGroupedList(containerId, list, emptyText) {
-      const container = document.getElementById(containerId);
-
-      if (list.length === 0) {
-        container.innerHTML = `<div class="empty">${emptyText}</div>`;
-        return;
-      }
-
-      const grouped = groupBySubject(list);
-      let html = "";
-
-      Object.keys(grouped).sort().forEach(subject => {
-        html += `<div class="section-block"><h3>${subject}</h3><ul>`;
-        grouped[subject].forEach(p => {
-          html += `<li>${escapeHtml(p.paper)} | ${escapeHtml(p.year)} | ${escapeHtml(p.session)} | ${escapeHtml(p.tz)}`;
-
-          if (p.score && p.score.trim() !== "") {
-            html += `<div class="score-box">📊 Sonuç: ${escapeHtml(p.score)}</div>`;
-          }
-
-          if (p.note && p.note.trim() !== "") {
-            html += `<div class="note-box">📝 ${escapeHtml(p.note)}</div>`;
-          }
-
-          if (p.repeat) {
-            html += ` <span class="badge badge-repeat">🔁 Repeat</span>`;
-          }
-
-          html += `</li>`;
-        });
-        html += `</ul></div>`;
-      });
-
-      container.innerHTML = html;
-    }
-
-    function escapeHtml(text) {
-      const div = document.createElement("div");
-      div.textContent = text || "";
-      return div.innerHTML;
-    }
-
-    function matchesSearch(p) {
-      if (!searchTerm) return true;
-
-      const combined = [
-        p.subject || "",
-        p.year || "",
-        p.session || "",
-        p.tz || "",
-        p.paper || "",
-        p.score || "",
-        p.note || ""
-      ].join(" ").toLowerCase();
-
-      return combined.includes(searchTerm);
-    }
-
-    window.switchAuthTab = function(tab, btn) {
-      document.querySelectorAll("#authSection .tab-content").forEach(el => el.classList.remove("active"));
-      document.querySelectorAll("#authSection .tab-btn").forEach(el => el.classList.remove("active"));
-
-      if (tab === "login") {
-        document.getElementById("loginTab").classList.add("active");
-      } else {
-        document.getElementById("signupTab").classList.add("active");
-      }
-
-      btn.classList.add("active");
-      document.getElementById("authMessage").textContent = "";
-    };
-
-    window.switchTab = function(tabId, btn) {
-      document.querySelectorAll(".app-tab-content").forEach(tab => tab.classList.remove("active"));
-      document.querySelectorAll("#appSection .tab-btn").forEach(button => button.classList.remove("active"));
-      document.getElementById(tabId).classList.add("active");
-      btn.classList.add("active");
-    };
-
-    window.handleSearch = function() {
-      searchTerm = document.getElementById("searchInput").value.trim().toLowerCase();
-      renderTable();
-    };
-
-    window.setFilter = function(filter) {
-      currentFilter = filter;
-      renderTable();
-    };
-
-    window.signUp = async function() {
-      const name = document.getElementById("signupName").value.trim();
-      const email = document.getElementById("signupEmail").value.trim();
-      const password = document.getElementById("signupPassword").value;
-      const password2 = document.getElementById("signupPassword2").value;
-      const msg = document.getElementById("authMessage");
-
-      msg.textContent = "";
-
-      if (!name || !email || !password || !password2) {
-        msg.textContent = "Lütfen tüm alanları doldur.";
-        return;
-      }
-
-      if (password !== password2) {
-        msg.textContent = "Şifreler eşleşmiyor.";
-        return;
-      }
-
-      if (password.length < 6) {
-        msg.textContent = "Şifre en az 6 karakter olmalı.";
-        return;
-      }
-
-      try {
-        const cred = await createUserWithEmailAndPassword(auth, email, password);
-
-        await updateProfile(cred.user, {
-          displayName: name
-        });
-
-        await setDoc(doc(db, "users", cred.user.uid), {
-          displayName: name,
-          email: email,
-          createdAt: serverTimestamp()
-        });
-
-        msg.textContent = "Hesap oluşturuldu.";
-
-        document.getElementById("signupName").value = "";
-        document.getElementById("signupEmail").value = "";
-        document.getElementById("signupPassword").value = "";
-        document.getElementById("signupPassword2").value = "";
-      } catch (error) {
-        msg.textContent = "Kayıt hatası: " + error.message;
-        console.error(error);
-      }
-    };
-
-    window.logIn = async function() {
-      const email = document.getElementById("loginEmail").value.trim();
-      const password = document.getElementById("loginPassword").value;
-      const msg = document.getElementById("authMessage");
-
-      msg.textContent = "";
-
-      if (!email || !password) {
-        msg.textContent = "Email ve şifre gir.";
-        return;
-      }
-
-      try {
-        await signInWithEmailAndPassword(auth, email, password);
-        msg.textContent = "";
-        document.getElementById("loginEmail").value = "";
-        document.getElementById("loginPassword").value = "";
-      } catch (error) {
-        msg.textContent = "Giriş hatası: " + error.message;
-        console.error(error);
-      }
-    };
-
-    window.forgotPassword = async function() {
-      const email = document.getElementById("loginEmail").value.trim();
-      const msg = document.getElementById("authMessage");
-
-      msg.textContent = "";
-
-      if (!email) {
-        msg.textContent = "Önce email adresini gir.";
-        return;
-      }
-
-      try {
-        await sendPasswordResetEmail(auth, email);
-        msg.textContent = "Şifre sıfırlama maili gönderildi. Gelen kutunu ve spam klasörünü kontrol et.";
-      } catch (error) {
-        msg.textContent = "Şifre sıfırlama hatası: " + error.message;
-        console.error(error);
-      }
-    };
-
-    window.logOut = async function() {
-      try {
-        await signOut(auth);
-      } catch (error) {
-        alert("Çıkış hatası: " + error.message);
-        console.error(error);
-      }
-    };
-
-    window.addPaper = async function() {
-      const subject = document.getElementById("subject").value.trim();
-      const year = document.getElementById("year").value.trim();
-      const session = document.getElementById("session").value;
-      const tz = document.getElementById("tz").value;
-      const paper = document.getElementById("paper").value.trim();
-
-      if (!subject || !year || !session || !tz || !paper) {
-        alert("Lütfen ders, yıl, session, TZ ve paper alanlarını doldur.");
-        return;
-      }
-
-      if (!currentUser) {
-        alert("Önce giriş yapmalısın.");
-        return;
-      }
-
-      try {
-        await addDoc(getUserPapersRef(currentUser.uid), {
-          subject,
-          year,
-          session,
-          tz,
-          paper,
-          score: "",
-          note: "",
-          completed: false,
-          completedDate: null,
-          repeat: false,
-          createdAt: serverTimestamp()
-        });
-
-        document.getElementById("subject").value = "";
-        document.getElementById("year").value = "";
-        document.getElementById("session").value = "";
-        document.getElementById("tz").value = "";
-        document.getElementById("paper").value = "";
-      } catch (error) {
-        alert("Ekleme hatası: " + error.message);
-        console.error(error);
-      }
-    };
-
-    window.toggleCompleted = async function(id, currentCompleted) {
-      if (!currentUser) {
-        alert("Önce giriş yapmalısın.");
-        return;
-      }
-
-      try {
-        const ref = doc(db, "users", currentUser.uid, "papers", id);
-
-        if (currentCompleted) {
-          await updateDoc(ref, {
-            completed: false,
-            completedDate: null
-          });
-        } else {
-          await updateDoc(ref, {
-            completed: true,
-            completedDate: getTodayDate()
-          });
-        }
-      } catch (error) {
-        alert("Güncelleme hatası: " + error.message);
-        console.error(error);
-      }
-    };
-
-    window.toggleRepeat = async function(id, currentRepeat) {
-      if (!currentUser) {
-        alert("Önce giriş yapmalısın.");
-        return;
-      }
-
-      try {
-        await updateDoc(doc(db, "users", currentUser.uid, "papers", id), {
-          repeat: !currentRepeat
-        });
-      } catch (error) {
-        alert("Repeat güncelleme hatası: " + error.message);
-        console.error(error);
-      }
-    };
-
-    window.editNote = async function(id) {
-      if (!currentUser) {
-        alert("Önce giriş yapmalısın.");
-        return;
-      }
-
-      const paper = papers.find(p => p.id === id);
-      const currentNote = paper ? (paper.note || "") : "";
-
-      const newNote = prompt("Yeni notu gir:", currentNote);
-      if (newNote === null) return;
-
-      try {
-        await updateDoc(doc(db, "users", currentUser.uid, "papers", id), {
-          note: newNote.trim()
-        });
-      } catch (error) {
-        alert("Not güncelleme hatası: " + error.message);
-        console.error(error);
-      }
-    };
-
-    window.editScore = async function(id) {
-      if (!currentUser) {
-        alert("Önce giriş yapmalısın.");
-        return;
-      }
-
-      const paper = papers.find(p => p.id === id);
-      const currentScore = paper ? (paper.score || "") : "";
-
-      const newScore = prompt("Yeni score / result gir:", currentScore);
-      if (newScore === null) return;
-
-      try {
-        await updateDoc(doc(db, "users", currentUser.uid, "papers", id), {
-          score: newScore.trim()
-        });
-      } catch (error) {
-        alert("Score güncelleme hatası: " + error.message);
-        console.error(error);
-      }
-    };
-
-    window.deletePaper = async function(id) {
-      if (!currentUser) {
-        alert("Önce giriş yapmalısın.");
-        return;
-      }
-
-      const ok = confirm("Bu paper silinsin mi?");
-      if (!ok) return;
-
-      try {
-        await deleteDoc(doc(db, "users", currentUser.uid, "papers", id));
-      } catch (error) {
-        alert("Silme hatası: " + error.message);
-        console.error(error);
-      }
-    };
-
-    window.addIA = async function() {
-      const subject = document.getElementById("iaSubject").value.trim();
-      const title = document.getElementById("iaTitle").value.trim();
-      const status = document.getElementById("iaStatus").value;
-      const deadline = document.getElementById("iaDeadline").value;
-      const note = document.getElementById("iaNote").value.trim();
-
-      if (!subject || !title || !status) {
-        alert("Lütfen ders, IA başlığı ve durum alanlarını doldur.");
-        return;
-      }
-
-      if (!currentUser) {
-        alert("Önce giriş yapmalısın.");
-        return;
-      }
-
-      try {
-        await addDoc(getUserIAsRef(currentUser.uid), {
-          subject,
-          title,
-          status,
-          deadline,
-          note,
-          createdAt: serverTimestamp()
-        });
-
-        document.getElementById("iaSubject").value = "";
-        document.getElementById("iaTitle").value = "";
-        document.getElementById("iaStatus").value = "";
-        document.getElementById("iaDeadline").value = "";
-        document.getElementById("iaNote").value = "";
-      } catch (error) {
-        alert("IA ekleme hatası: " + error.message);
-        console.error(error);
-      }
-    };
-
-    window.editIANote = async function(id) {
-      if (!currentUser) {
-        alert("Önce giriş yapmalısın.");
-        return;
-      }
-
-      const ia = ias.find(item => item.id === id);
-      const currentNote = ia ? (ia.note || "") : "";
-
-      const newNote = prompt("Yeni IA notunu gir:", currentNote);
-      if (newNote === null) return;
-
-      try {
-        await updateDoc(doc(db, "users", currentUser.uid, "ias", id), {
-          note: newNote.trim()
-        });
-      } catch (error) {
-        alert("IA not güncelleme hatası: " + error.message);
-        console.error(error);
-      }
-    };
-
-    window.editIAStatus = async function(id) {
-      if (!currentUser) {
-        alert("Önce giriş yapmalısın.");
-        return;
-      }
-
-      const ia = ias.find(item => item.id === id);
-      const currentStatus = ia ? (ia.status || "") : "";
-      const optionsText = IA_STATUS_OPTIONS.map((status, index) => `${index + 1}. ${status}`).join("\n");
-      const selected = prompt(`Yeni IA durumunu seç:\n\n${optionsText}\n\nMevcut durum: ${currentStatus}\n\nSadece numara yaz (örn: 1, 2, 3).`);
-
-      if (selected === null) return;
-
-      const selectedNumber = Number(selected.trim());
-      if (!selectedNumber || selectedNumber < 1 || selectedNumber > IA_STATUS_OPTIONS.length) {
-        alert("Geçerli bir numara gir.");
-        return;
-      }
-
-      const newStatus = IA_STATUS_OPTIONS[selectedNumber - 1];
-
-      try {
-        await updateDoc(doc(db, "users", currentUser.uid, "ias", id), {
-          status: newStatus
-        });
-      } catch (error) {
-        alert("IA durum güncelleme hatası: " + error.message);
-        console.error(error);
-      }
-    };
-
-    window.deleteIA = async function(id) {
-      if (!currentUser) {
-        alert("Önce giriş yapmalısın.");
-        return;
-      }
-
-      const ok = confirm("Bu IA silinsin mi?");
-      if (!ok) return;
-
-      try {
-        await deleteDoc(doc(db, "users", currentUser.uid, "ias", id));
-      } catch (error) {
-        alert("IA silme hatası: " + error.message);
-        console.error(error);
-      }
-    };
-
-    function renderStats() {
-      const total = papers.length;
-      const completed = papers.filter(p => p.completed).length;
-      const remaining = total - completed;
-      const today = getTodayDate();
-      const todayCount = papers.filter(p => p.completedDate === today).length;
-      const percentage = total > 0 ? ((completed / total) * 100).toFixed(1) : "0.0";
-
-      document.getElementById("totalCount").textContent = total;
-      document.getElementById("completedCount").textContent = completed;
-      document.getElementById("remainingCount").textContent = remaining;
-      document.getElementById("todayCount").textContent = todayCount;
-      document.getElementById("progressText").textContent = `%${percentage}`;
-      document.getElementById("progressFill").style.width = `${percentage}%`;
-    }
-
-    function renderSubjectProgress() {
-      const container = document.getElementById("subjectProgress");
-      container.innerHTML = "";
-
-      if (papers.length === 0) {
-        container.innerHTML = '<div class="empty">Henüz veri yok.</div>';
-        return;
-      }
-
-      const subjectMap = {};
-
-      papers.forEach(p => {
-        if (!subjectMap[p.subject]) {
-          subjectMap[p.subject] = { total: 0, completed: 0 };
-        }
-        subjectMap[p.subject].total += 1;
-        if (p.completed) subjectMap[p.subject].completed += 1;
-      });
-
-      Object.keys(subjectMap).sort().forEach(subject => {
-        const stats = subjectMap[subject];
-        const percent = ((stats.completed / stats.total) * 100).toFixed(1);
-
-        const div = document.createElement("div");
-        div.className = "subject-box";
-        div.innerHTML = `
-          <strong>${escapeHtml(subject)}</strong>
-          <div class="small">${stats.completed}/${stats.total} tamamlandı</div>
-          <div class="progress-bar" style="margin-top:8px;">
-            <div class="progress-fill" style="width:${percent}%;"></div>
-          </div>
-          <div class="small" style="margin-top:6px;">%${percent}</div>
-        `;
-        container.appendChild(div);
-      });
-    }
-
-    function renderTodayList() {
-      const today = getTodayDate();
-      const todayPapers = papers.filter(p => p.completedDate === today);
-      renderGroupedList("todayList", todayPapers, "Bugün henüz tamamlanan paper yok.");
-    }
-
-    function renderYesterdayList() {
-      const yesterday = getYesterdayDate();
-      const yesterdayPapers = papers.filter(p => p.completedDate === yesterday);
-      renderGroupedList("yesterdayList", yesterdayPapers, "Dün tamamlanan paper yok.");
-    }
-
-    function renderWeekList() {
-      const now = new Date();
-      const weekAgo = new Date();
-      weekAgo.setDate(now.getDate() - 7);
-
-      const weekPapers = papers.filter(p => {
-        if (!p.completedDate) return false;
-        const d = new Date(p.completedDate);
-        return d >= weekAgo && d <= now;
-      });
-
-      renderGroupedList("weekList", weekPapers, "Bu hafta tamamlanan paper yok.");
-    }
-
-    function renderMonthList() {
-      const now = new Date();
-
-      const monthPapers = papers.filter(p => {
-        if (!p.completedDate) return false;
-        const d = new Date(p.completedDate);
-        return d.getMonth() === now.getMonth() &&
-               d.getFullYear() === now.getFullYear();
-      });
-
-      renderGroupedList("monthList", monthPapers, "Bu ay tamamlanan paper yok.");
-    }
-
-    function renderTable() {
-      const container = document.getElementById("paperTable");
-
-      let filtered = [...papers];
-
-      if (currentFilter === "completed") {
-        filtered = filtered.filter(p => p.completed);
-      } else if (currentFilter === "unfinished") {
-        filtered = filtered.filter(p => !p.completed);
-      } else if (currentFilter === "repeat") {
-        filtered = filtered.filter(p => p.repeat);
-      }
-
-      filtered = filtered.filter(matchesSearch);
-
-      if (filtered.length === 0) {
-        container.innerHTML = '<div class="empty">Gösterilecek paper yok.</div>';
-        return;
-      }
-
-      let html = `
-        <table>
-          <thead>
-            <tr>
-              <th>Ders</th>
-              <th>Yıl</th>
-              <th>Session</th>
-              <th>TZ</th>
-              <th>Paper</th>
-              <th>Durum</th>
-              <th>Tarih</th>
-              <th>Score</th>
-              <th>Not</th>
-              <th>İşlem</th>
-            </tr>
-          </thead>
-          <tbody>
-      `;
-
-      filtered.forEach(p => {
-        html += `
-          <tr>
-            <td data-label="Ders">${escapeHtml(p.subject)}</td>
-            <td data-label="Yıl">${escapeHtml(p.year)}</td>
-            <td data-label="Session">${escapeHtml(p.session)}</td>
-            <td data-label="TZ">${escapeHtml(p.tz)}</td>
-            <td data-label="Paper">
-              ${escapeHtml(p.paper)}
-              ${p.repeat ? '<div style="margin-top:6px;"><span class="badge badge-repeat">🔁 Repeat</span></div>' : ''}
-            </td>
-            <td data-label="Durum">
-              ${p.completed
-                ? '<span class="badge badge-done">BİTTİ</span>'
-                : '<span class="badge badge-notdone">BİTMEDİ</span>'}
-            </td>
-            <td data-label="Tarih">${p.completedDate || "-"}</td>
-            <td data-label="Score">
-              ${p.score && p.score.trim() !== "" ? `<div class="score-box">${escapeHtml(p.score)}</div>` : "-"}
-            </td>
-            <td data-label="Not">
-              ${p.note && p.note.trim() !== "" ? `<div class="note-box">${escapeHtml(p.note)}</div>` : "-"}
-            </td>
-            <td data-label="İşlem">
-              <div class="actions-inline">
-                <button class="${p.completed ? "btn-secondary" : "btn-success"}"
-                        onclick="toggleCompleted('${p.id}', ${p.completed})">
-                  ${p.completed ? "Geri Al" : "Bitir"}
-                </button>
-                <button class="btn-warning" onclick="toggleRepeat('${p.id}', ${p.repeat})">
-                  ${p.repeat ? "Repeat Kaldır" : "Repeat Again"}
-                </button>
-                <button class="btn-score" onclick="editScore('${p.id}')">
-                  Score Düzenle
-                </button>
-                <button class="btn-primary" onclick="editNote('${p.id}')">
-                  Not Düzenle
-                </button>
-                <button class="btn-danger" onclick="deletePaper('${p.id}')">Sil</button>
-              </div>
-            </td>
-          </tr>
-        `;
-      });
-
-      html += "</tbody></table>";
-      container.innerHTML = html;
-    }
-
-    function renderIAList() {
-      const container = document.getElementById("iaList");
-
-      if (ias.length === 0) {
-        container.innerHTML = '<div class="empty">Henüz IA eklenmedi.</div>';
-        return;
-      }
-
-      let html = "";
-
-      ias.forEach(ia => {
-        html += `
-          <div class="ia-card">
-            <div class="ia-title">${escapeHtml(ia.subject)} — ${escapeHtml(ia.title)}</div>
-
-            <div>
-              <span class="badge ${ia.status === "Completed" ? "badge-completed" : "badge-ia"}">
-                ${escapeHtml(ia.status || "-")}
-              </span>
-            </div>
-
-            ${ia.deadline ? `<div class="deadline-box">📅 Deadline: ${escapeHtml(ia.deadline)}</div>` : ""}
-            ${ia.note && ia.note.trim() !== "" ? `<div class="note-box">📝 ${escapeHtml(ia.note)}</div>` : ""}
-
-            <div class="actions-inline" style="margin-top: 10px;">
-              <button class="btn-primary" onclick="editIAStatus('${ia.id}')">Durum Düzenle</button>
-              <button class="btn-secondary" onclick="editIANote('${ia.id}')">Not Düzenle</button>
-              <button class="btn-danger" onclick="deleteIA('${ia.id}')">Sil</button>
-            </div>
-          </div>
-        `;
-      });
-
-      container.innerHTML = html;
-    }
-
-    function renderAll() {
-      renderStats();
-      renderSubjectProgress();
-      renderTodayList();
-      renderYesterdayList();
-      renderWeekList();
-      renderMonthList();
-      renderTable();
-      renderIAList();
-    }
-
-    function clearUIData() {
-      papers = [];
-      ias = [];
-      renderAll();
-    }
-
-    function stopListeners() {
-      if (unsubscribePapers) {
-        unsubscribePapers();
-        unsubscribePapers = null;
-      }
-      if (unsubscribeIAs) {
-        unsubscribeIAs();
-        unsubscribeIAs = null;
-      }
-    }
-
-    function startListeners(uid) {
-      const papersQuery = getUserPapersQuery(uid);
-      const iasQuery = getUserIAsQuery(uid);
-
-      unsubscribePapers = onSnapshot(
-        papersQuery,
-        (snapshot) => {
-          papers = snapshot.docs.map(docItem => ({
-            id: docItem.id,
-            ...docItem.data()
-          }));
-          renderAll();
-        },
-        (error) => {
-          console.error(error);
-          document.getElementById("paperTable").innerHTML =
-            `<div class="empty">Firestore bağlantı hatası: ${error.message}</div>`;
-        }
-      );
-
-      unsubscribeIAs = onSnapshot(
-        iasQuery,
-        (snapshot) => {
-          ias = snapshot.docs.map(docItem => ({
-            id: docItem.id,
-            ...docItem.data()
-          }));
-          renderAll();
-        },
-        (error) => {
-          console.error(error);
-          document.getElementById("iaList").innerHTML =
-            `<div class="empty">IA bağlantı hatası: ${error.message}</div>`;
-        }
-      );
-    }
-
-    onAuthStateChanged(auth, (user) => {
-      currentUser = user;
-
-      if (user) {
-        document.getElementById("authSection").style.display = "none";
-        document.getElementById("appSection").style.display = "block";
-
-        const info = document.getElementById("currentUserInfo");
-        if (info) {
-          info.textContent = `Giriş yapan: ${user.email}`;
-        }
-
-        stopListeners();
-        startListeners(user.uid);
-      } else {
-        stopListeners();
-        clearUIData();
-
-        document.getElementById("appSection").style.display = "none";
-        document.getElementById("authSection").style.display = "block";
-      }
+const appFirebase = initializeApp(firebaseConfig);
+const auth = getAuth(appFirebase);
+const db = getFirestore(appFirebase);
+
+let currentUser = null;
+let workouts = [];
+let nutritions = [];
+let bodyLogs = [];
+
+const program = {
+"Upper Day": [
+["Machine Fly","3x12","Isınma + 2 work set. Göğsü maksimum aç, ortada 1 sn sık."],
+["Incline Smith Press","4x8-10","2 ısınma + 2 work set. Negatif 2-3 sn, üstte kilitleme."],
+["Lat Pulldown","4x10","Göğse doğru çek, barı dik indir."],
+["Wide Grip Row","3x12","Dirsekleri dışa açarak çek, upper back odaklı."],
+["Lateral Raise","3x15","Ağırlığı omuzdan kaldır, trapeze kaçırma."],
+["Face Pull","3x15","İpi yüz hizasına çek, arka omuzu sık."],
+["Barbell Curl","3x10","Dirsek sabit, negatif yavaş."],
+["Rope Pushdown","3x12","Triceps 1 sn sık."]
+],
+"Lower Day": [
+["Squat","4x6-8","Core sıkı, topuk yerde, negatif kontrollü."],
+["Leg Press","3x10","Platformu kontrollü indir."],
+["Romanian Deadlift","3x8-10","Kalçayı geriye gönder, hamstring gerilimini hisset."],
+["Leg Curl","3x12","Üstte 1 sn sık."],
+["Standing Calf Raise","4x15-20","Üstte sık, altta 2 sn bekle."],
+["Cable Crunch","3x12-15","Belden değil karından bükül."]
+],
+"Push Day": [
+["Machine Fly","3x12","1 ısınma + 2 work set."],
+["Incline Chest Machine","3x12","Kontrollü indir, üst göğüste sık."],
+["Cable Crossover","3x15","Göğsü gerdir, ortada 1 sn sık."],
+["Machine Shoulder Press","3x12","Dirsekler omuz hizasının biraz önünde."],
+["Cable Lateral Raise","4x15","Form odaklı."],
+["Lying Triceps Extension","3x12","Dirsek sabit."],
+["Rope Pushdown","3x12","Kontrollü bırak."]
+],
+"Pull Day": [
+["T-Bar Row","4x10","Gövde sabit, barı alt göğse çek."],
+["Reverse Grip Pulldown","3x12","Lat odaklı çek."],
+["One Arm Dumbbell Row","3x10","Sırtı 1 sn sık."],
+["Seated Cable Row","3x12","Kürek kemiklerini sık."],
+["Rear Delt Fly","3x15","Arka omuz odaklı."],
+["Hammer Curl","3x10","Sallamadan kontrollü."],
+["Incline Dumbbell Curl","2x12","Biceps tam esnet."]
+],
+"Leg Day": [
+["Leg Extension","4x12","Üstte 1 sn sık."],
+["Lying Leg Curl","4x12","Hamstring hissi odaklı."],
+["Bulgarian Split Squat","3x10 each leg","Kalça + quad birlikte çalışsın."],
+["Walking Lunge","3x12 each leg","Adımı kontrollü at."],
+["Leg Press","2x20","Yüksek tekrar, yanma odaklı."],
+["Standing Calf Raise","4x20","Yarım tekrar yapma."]
+]
+};
+
+const nutritionItems = [
+"Uyanır uyanmaz: 1 yemek kaşığı elma sirkesi + yarım limon",
+"Kardiyo öncesi: 1 fincan kahve",
+"Öğün 1: 5 yumurta beyazı + 1 tam yumurta",
+"Öğün 1: 50g glutensiz yulaf veya rice cream",
+"Öğün 1: 40g ananas veya kırmızı orman meyvesi",
+"Öğün 2: 150g tavuk/hindi + 50g basmati + 5g zeytinyağı + salata/sebze",
+"Öğün 3: 150g tavuk/hindi/yağsız kıyma + 50g basmati + 5g zeytinyağı",
+"Öğün 4: 180g tavuk/hindi/mezgit + 200g patates/tatlı patates + 5g zeytinyağı",
+"Günlük 4 litre su",
+"Günlük 2 bardak sade kahve veya yeşil çay",
+"Vitamin: 300mg magnesium complex",
+"Vitamin: 500mg berberin",
+"Vitamin: 4000iu D3K2",
+"Vitamin: 1000mg omega 3"
+];
+
+function today(){
+  return new Date().toISOString().split("T")[0];
+}
+
+document.getElementById("workoutDate").value = today();
+document.getElementById("nutritionDate").value = today();
+document.getElementById("bodyDate").value = today();
+
+window.signUp = async function(){
+  await createUserWithEmailAndPassword(auth, email.value, password.value);
+};
+
+window.login = async function(){
+  await signInWithEmailAndPassword(auth, email.value, password.value);
+};
+
+window.logout = function(){
+  signOut(auth);
+};
+
+onAuthStateChanged(auth, user => {
+  if(user){
+    currentUser = user;
+    authBox.classList.add("hidden");
+    app.classList.remove("hidden");
+    userEmail.textContent = user.email;
+    loadData();
+  } else {
+    currentUser = null;
+    authBox.classList.remove("hidden");
+    app.classList.add("hidden");
+  }
+});
+
+window.switchTab = function(tabId, btn){
+  document.querySelectorAll(".tab-content").forEach(t=>t.classList.remove("active"));
+  document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));
+  document.getElementById(tabId).classList.add("active");
+  btn.classList.add("active");
+};
+
+function renderProgram(){
+  let html = "";
+  Object.entries(program).forEach(([day, exercises])=>{
+    html += `<div class="card"><h3>${day}</h3>`;
+    exercises.forEach(ex=>{
+      html += `<div class="exercise"><b>${ex[0]}</b> <span class="badge badge-blue">${ex[1]}</span><div class="small">${ex[2]}</div></div>`;
     });
-  </script>
+    html += `</div>`;
+  });
+  programList.innerHTML = html;
+}
+
+window.renderWorkoutForm = function(){
+  const day = workoutDay.value;
+  if(!day){ workoutForm.innerHTML = ""; return; }
+
+  let html = `<h3>${day}</h3>`;
+  program[day].forEach((ex, i)=>{
+    html += `
+    <div class="exercise">
+      <b>${ex[0]}</b> <span class="badge badge-blue">${ex[1]}</span>
+      <div class="small">${ex[2]}</div>
+      <div class="grid grid-3" style="margin-top:8px;">
+        <input id="sets_${i}" placeholder="Set">
+        <input id="reps_${i}" placeholder="Reps">
+        <input id="weight_${i}" placeholder="Kg">
+      </div>
+      <textarea id="note_${i}" placeholder="Egzersiz notu"></textarea>
+    </div>`;
+  });
+  workoutForm.innerHTML = html;
+};
+
+window.saveWorkout = async function(){
+  const day = workoutDay.value;
+  const date = workoutDate.value;
+  if(!day || !date) return alert("Gün ve tarih seç.");
+
+  const entries = program[day].map((ex, i)=>({
+    name: ex[0],
+    target: ex[1],
+    sets: document.getElementById(`sets_${i}`).value,
+    reps: document.getElementById(`reps_${i}`).value,
+    weight: document.getElementById(`weight_${i}`).value,
+    note: document.getElementById(`note_${i}`).value
+  }));
+
+  await addDoc(collection(db,"gymWorkouts"),{
+    userId: currentUser.uid,
+    day,
+    date,
+    entries,
+    createdAt: serverTimestamp()
+  });
+
+  alert("Antrenman kaydedildi.");
+  workoutDay.value = "";
+  workoutForm.innerHTML = "";
+};
+
+function renderWorkoutHistory(){
+  if(workouts.length === 0){
+    workoutHistory.innerHTML = `<div class="small">Henüz antrenman kaydı yok.</div>`;
+    return;
+  }
+
+  workoutHistory.innerHTML = workouts.map(w=>`
+    <div class="card">
+      <h3>${w.date} — ${w.day}</h3>
+      ${w.entries.map(e=>`
+        <div class="exercise">
+          <b>${e.name}</b>
+          <div>${e.sets || "-"} set × ${e.reps || "-"} reps × ${e.weight || "-"} kg</div>
+          ${e.note ? `<div class="note">${e.note}</div>` : ""}
+        </div>
+      `).join("")}
+      <button class="btn-red" onclick="deleteWorkout('${w.id}')">Sil</button>
+    </div>
+  `).join("");
+}
+
+window.deleteWorkout = id => deleteDoc(doc(db,"gymWorkouts",id));
+
+function renderNutritionChecklist(){
+  nutritionChecklist.innerHTML = nutritionItems.map((item,i)=>`
+    <label class="check-row">
+      <input type="checkbox" id="nutri_${i}">
+      <span>${item}</span>
+    </label>
+  `).join("");
+}
+
+window.saveNutrition = async function(){
+  const date = nutritionDate.value;
+  const completed = {};
+  nutritionItems.forEach((_,i)=>{
+    completed[i] = document.getElementById(`nutri_${i}`).checked;
+  });
+
+  await addDoc(collection(db,"gymNutrition"),{
+    userId: currentUser.uid,
+    date,
+    completed,
+    note: nutritionNote.value,
+    createdAt: serverTimestamp()
+  });
+
+  alert("Beslenme kaydedildi.");
+  nutritionNote.value = "";
+  renderNutritionChecklist();
+};
+
+function renderNutritionHistory(){
+  if(nutritions.length === 0){
+    nutritionHistory.innerHTML = `<div class="small">Henüz beslenme kaydı yok.</div>`;
+    return;
+  }
+
+  nutritionHistory.innerHTML = nutritions.map(n=>{
+    const doneCount = Object.values(n.completed || {}).filter(Boolean).length;
+    return `
+    <div class="card">
+      <h3>${n.date}</h3>
+      <span class="badge badge-green">${doneCount}/${nutritionItems.length} tamamlandı</span>
+      ${n.note ? `<div class="note">${n.note}</div>` : ""}
+      <button class="btn-red" onclick="deleteNutrition('${n.id}')">Sil</button>
+    </div>`;
+  }).join("");
+}
+
+window.deleteNutrition = id => deleteDoc(doc(db,"gymNutrition",id));
+
+window.saveBodyProgress = async function(){
+  if(!bodyWeight.value) return alert("Kilo gir.");
+
+  await addDoc(collection(db,"gymBodyProgress"),{
+    userId: currentUser.uid,
+    date: bodyDate.value,
+    weight: bodyWeight.value,
+    note: bodyNote.value,
+    createdAt: serverTimestamp()
+  });
+
+  bodyWeight.value = "";
+  bodyNote.value = "";
+};
+
+function renderBodyHistory(){
+  if(bodyLogs.length === 0){
+    bodyHistory.innerHTML = `<div class="small">Henüz kilo kaydı yok.</div>`;
+    return;
+  }
+
+  bodyHistory.innerHTML = bodyLogs.map(b=>`
+    <div class="card">
+      <b>${b.date}</b> — ${b.weight} kg
+      ${b.note ? `<div class="note">${b.note}</div>` : ""}
+      <button class="btn-red" onclick="deleteBody('${b.id}')">Sil</button>
+    </div>
+  `).join("");
+}
+
+window.deleteBody = id => deleteDoc(doc(db,"gymBodyProgress",id));
+
+function renderStats(){
+  const now = new Date();
+  const weekAgo = new Date();
+  weekAgo.setDate(now.getDate() - 7);
+
+  const weekly = workouts.filter(w => new Date(w.date) >= weekAgo);
+  weeklyWorkoutCount.textContent = weekly.length;
+  lastWorkout.textContent = workouts[0] ? workouts[0].date : "-";
+
+  let volume = 0;
+  workouts.forEach(w=>{
+    w.entries.forEach(e=>{
+      const sets = Number(e.sets) || 0;
+      const reps = Number(e.reps) || 0;
+      const weight = Number(e.weight) || 0;
+      volume += sets * reps * weight;
+    });
+  });
+  totalVolume.textContent = Math.round(volume);
+}
+
+function loadData(){
+  onSnapshot(query(collection(db,"gymWorkouts")), snap=>{
+    workouts = snap.docs.map(d=>({id:d.id,...d.data()}))
+      .filter(x=>x.userId===currentUser.uid)
+      .sort((a,b)=>(b.date||"").localeCompare(a.date||""));
+    renderWorkoutHistory();
+    renderStats();
+  });
+
+  onSnapshot(query(collection(db,"gymNutrition")), snap=>{
+    nutritions = snap.docs.map(d=>({id:d.id,...d.data()}))
+      .filter(x=>x.userId===currentUser.uid)
+      .sort((a,b)=>(b.date||"").localeCompare(a.date||""));
+    renderNutritionHistory();
+  });
+
+  onSnapshot(query(collection(db,"gymBodyProgress")), snap=>{
+    bodyLogs = snap.docs.map(d=>({id:d.id,...d.data()}))
+      .filter(x=>x.userId===currentUser.uid)
+      .sort((a,b)=>(b.date||"").localeCompare(a.date||""));
+    renderBodyHistory();
+  });
+}
+
+renderProgram();
+renderNutritionChecklist();
+</script>
 </body>
 </html>
