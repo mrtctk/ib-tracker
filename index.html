@@ -4,49 +4,31 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Gym Compliance Tracker</title>
-
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial,sans-serif;background:#f3f4f6;color:#111827}
 .container{max-width:1200px;margin:30px auto;padding:20px}
 .card{background:white;padding:20px;border-radius:16px;margin-bottom:20px;box-shadow:0 4px 12px rgba(0,0,0,.06)}
-h1,h2,h3{margin-top:0}
 input,select,textarea,button{width:100%;padding:11px;border-radius:10px;border:1px solid #d1d5db;font-size:14px}
 textarea{min-height:70px;resize:vertical}
 button{cursor:pointer;border:none;font-weight:bold;margin-top:8px}
-.btn{background:#2563eb;color:white}
-.btn-green{background:#16a34a;color:white}
-.btn-red{background:#dc2626;color:white}
-.btn-gray{background:#6b7280;color:white}
-.hidden{display:none}
-.tabs{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap}
+.btn{background:#2563eb;color:white}.btn-green{background:#16a34a;color:white}.btn-red{background:#dc2626;color:white}.btn-gray{background:#6b7280;color:white}
+.hidden{display:none}.tabs{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap}
 .tab-btn{width:auto;background:white;border:1px solid #d1d5db;padding:12px 18px;border-radius:999px;font-weight:bold}
 .tab-btn.active{background:#2563eb;color:white;border-color:#2563eb}
-.tab-content{display:none}
-.tab-content.active{display:block}
-.grid{display:grid;gap:12px}
-.grid-2{grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
-.grid-3{grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}
+.tab-content{display:none}.tab-content.active{display:block}
+.grid{display:grid;gap:12px}.grid-2{grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}.grid-3{grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}
 .exercise,.check-item{background:#f9fafb;padding:14px;border-radius:12px;margin-bottom:10px;border:1px solid #e5e7eb}
 .badge{display:inline-block;padding:5px 10px;border-radius:999px;font-size:12px;font-weight:bold;margin:4px 4px 4px 0}
-.badge-blue{background:#dbeafe;color:#1d4ed8}
-.badge-green{background:#dcfce7;color:#166534}
-.badge-red{background:#fee2e2;color:#991b1b}
-.badge-orange{background:#ffedd5;color:#9a3412}
-.progress{height:18px;background:#e5e7eb;border-radius:999px;overflow:hidden;margin-top:8px}
-.progress-fill{height:100%;background:#2563eb;width:0%}
-.small{font-size:13px;color:#6b7280}
-.note{margin-top:8px;background:#f3f4f6;padding:10px;border-radius:10px;white-space:pre-wrap;overflow-wrap:anywhere}
-.stat{font-size:28px;font-weight:bold}
-.check-row{display:flex;align-items:flex-start;gap:10px}
-.check-row input{width:auto;margin-top:3px}
+.badge-blue{background:#dbeafe;color:#1d4ed8}.badge-green{background:#dcfce7;color:#166534}.badge-orange{background:#ffedd5;color:#9a3412}
+.progress{height:18px;background:#e5e7eb;border-radius:999px;overflow:hidden;margin-top:8px}.progress-fill{height:100%;background:#2563eb;width:0%}
+.small{font-size:13px;color:#6b7280}.note{margin-top:8px;background:#f3f4f6;padding:10px;border-radius:10px;white-space:pre-wrap;overflow-wrap:anywhere}.stat{font-size:28px;font-weight:bold}
+.check-row{display:flex;align-items:flex-start;gap:10px}.check-row input{width:auto;margin-top:3px}
 </style>
 </head>
-
 <body>
 <div class="container">
 <h1>Gym Compliance Tracker</h1>
-<p class="small">Antrenman ve beslenme programına ne kadar uyduğunu takip et.</p>
 
 <div id="authBox" class="card">
 <h2>Login / Sign Up</h2>
@@ -64,34 +46,24 @@ button{cursor:pointer;border:none;font-weight:bold;margin-top:8px}
 
 <div class="tabs">
 <button class="tab-btn active" onclick="switchTab('todayTab', this)">Bugün</button>
-<button class="tab-btn" onclick="switchTab('programTab', this)">Program</button>
+<button class="tab-btn" onclick="switchTab('workoutTab', this)">Antrenman</button>
 <button class="tab-btn" onclick="switchTab('nutritionTab', this)">Beslenme</button>
+<button class="tab-btn" onclick="switchTab('programTab', this)">Program</button>
 <button class="tab-btn" onclick="switchTab('historyTab', this)">Geçmiş</button>
-<button class="tab-btn" onclick="switchTab('progressTab', this)">Progress</button>
 </div>
 
 <div id="todayTab" class="tab-content active">
 <div class="grid grid-3">
-<div class="card">
-<h3>Bugünkü Antrenman Uyumu</h3>
-<div class="stat" id="todayWorkoutPercent">0%</div>
-<div class="progress"><div id="todayWorkoutBar" class="progress-fill"></div></div>
-</div>
-<div class="card">
-<h3>Bugünkü Beslenme Uyumu</h3>
-<div class="stat" id="todayNutritionPercent">0%</div>
-<div class="progress"><div id="todayNutritionBar" class="progress-fill"></div></div>
-</div>
-<div class="card">
-<h3>Haftalık Antrenman</h3>
-<div class="stat" id="weeklyWorkoutCount">0</div>
+<div class="card"><h3>Bugünkü Antrenman</h3><div class="stat" id="todayWorkoutPercent">0%</div><div class="progress"><div id="todayWorkoutBar" class="progress-fill"></div></div></div>
+<div class="card"><h3>Bugünkü Beslenme</h3><div class="stat" id="todayNutritionPercent">0%</div><div class="progress"><div id="todayNutritionBar" class="progress-fill"></div></div></div>
+<div class="card"><h3>Haftalık Antrenman</h3><div class="stat" id="weeklyWorkoutCount">0</div></div>
 </div>
 </div>
 
+<div id="workoutTab" class="tab-content">
 <div class="card">
-<h2>Bugünkü Plan</h2>
-<input id="todayDate" type="date">
-<div class="grid grid-2" style="margin-top:12px;">
+<h2>Antrenman Kaydı</h2>
+<input id="workoutDate" type="date">
 <select id="workoutDay" onchange="renderWorkoutChecklist()">
 <option value="">Antrenman günü seç</option>
 <option value="Upper Day">Upper Day</option>
@@ -101,434 +73,180 @@ button{cursor:pointer;border:none;font-weight:bold;margin-top:8px}
 <option value="Leg Day">Leg Day</option>
 <option value="Rest/Cardio">Rest / Cardio</option>
 </select>
-<textarea id="dailyNote" placeholder="Günlük not"></textarea>
-</div>
 <div id="workoutChecklist" style="margin-top:15px;"></div>
-<button class="btn-green" onclick="saveDailyLog()">Günü Kaydet</button>
-</div>
-</div>
-
-<div id="programTab" class="tab-content">
-<div class="card">
-<h2>Antrenman Programı</h2>
-<div id="programList"></div>
+<textarea id="workoutNote" placeholder="Antrenman notu"></textarea>
+<button class="btn-green" onclick="saveWorkoutLog()">Antrenmanı Kaydet</button>
 </div>
 </div>
 
 <div id="nutritionTab" class="tab-content">
 <div class="card">
-<h2>Beslenme Checklist</h2>
-<p class="small">Buradaki maddeler günlük beslenme programına göre oluşturuldu.</p>
+<h2>Beslenme Kaydı</h2>
+<input id="nutritionDate" type="date">
 <div id="nutritionChecklist"></div>
+<textarea id="nutritionNote" placeholder="Beslenme notu"></textarea>
+<button class="btn-green" onclick="saveNutritionLog()">Beslenmeyi Kaydet</button>
 </div>
+</div>
+
+<div id="programTab" class="tab-content">
+<div class="card"><h2>Antrenman Programı</h2><div id="programList"></div></div>
 </div>
 
 <div id="historyTab" class="tab-content">
-<div class="card">
-<h2>Günlük Geçmiş</h2>
-<div id="historyList"></div>
-</div>
-</div>
-
-<div id="progressTab" class="tab-content">
-<div class="grid grid-3">
-<div class="card">
-<h3>Toplam Gün Kaydı</h3>
-<div class="stat" id="totalDays">0</div>
-</div>
-<div class="card">
-<h3>Ortalama Antrenman Uyumu</h3>
-<div class="stat" id="avgWorkout">0%</div>
-</div>
-<div class="card">
-<h3>Ortalama Beslenme Uyumu</h3>
-<div class="stat" id="avgNutrition">0%</div>
-</div>
-</div>
-
-<div class="card">
-<h2>Vücut Ağırlığı Kaydı</h2>
-<div class="grid grid-2">
-<input id="bodyDate" type="date">
-<input id="bodyWeight" placeholder="Kilo örn: 78.5">
-</div>
-<textarea id="bodyNote" placeholder="Not"></textarea>
-<button class="btn" onclick="saveBodyProgress()">Kaydet</button>
-</div>
-
-<div class="card">
-<h2>Kilo Geçmişi</h2>
-<div id="bodyHistory"></div>
-</div>
+<div class="card"><h2>Antrenman Geçmişi</h2><div id="workoutHistory"></div></div>
+<div class="card"><h2>Beslenme Geçmişi</h2><div id="nutritionHistory"></div></div>
 </div>
 </div>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
-import {
-getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,signOut,onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
-import {
-getFirestore,collection,addDoc,deleteDoc,doc,onSnapshot,query,serverTimestamp
-} from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
+import {getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,signOut,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
+import {getFirestore,collection,addDoc,deleteDoc,doc,onSnapshot,query,serverTimestamp} from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyCJy3O5GgABLuEi9pJ2C9yp_uxTl1NKbIU",
-  authDomain: "ib-tracker-3fa15.firebaseapp.com",
-  projectId: "ib-tracker-3fa15",
-  storageBucket: "ib-tracker-3fa15.firebasestorage.app",
-  messagingSenderId: "1084870933621",
-  appId: "1:1084870933621:web:42aaf1a1c273f2e6fb8c3c",
-  measurementId: "G-SHTVY448SY"
+const firebaseConfig={
+apiKey:"AIzaSyCJy3O5GgABLuEi9pJ2C9yp_uxTl1NKbIU",
+authDomain:"ib-tracker-3fa15.firebaseapp.com",
+projectId:"ib-tracker-3fa15",
+storageBucket:"ib-tracker-3fa15.firebasestorage.app",
+messagingSenderId:"1084870933621",
+appId:"1:1084870933621:web:42aaf1a1c273f2e6fb8c3c",
+measurementId:"G-SHTVY448SY"
 };
 
 const appFirebase=initializeApp(firebaseConfig);
 const auth=getAuth(appFirebase);
 const db=getFirestore(appFirebase);
-
-let currentUser=null;
-let dailyLogs=[];
-let bodyLogs=[];
+let currentUser=null, workoutLogs=[], nutritionLogs=[];
 
 const program={
-"Upper Day":[
-["Machine Fly","3x12","Isınma + 2 work set. Göğsü maksimum aç, ortada 1 sn sık."],
-["Incline Smith Press","4x8-10","Negatif 2-3 sn, üstte kilitleme."],
-["Lat Pulldown","4x10","Göğse doğru çek, barı dik indir."],
-["Wide Grip Row","3x12","Dirsekleri dışa açarak çek, upper back odaklı."],
-["Lateral Raise","3x15","Hafif kilo, form odaklı."],
-["Face Pull","3x15","İpi yüz hizasına çek, arka omuzu sık."],
-["Barbell Curl","3x10","Dirsek sabit, negatif yavaş."],
-["Rope Pushdown","3x12","Triceps 1 sn sık."]
-],
-"Lower Day":[
-["Squat","4x6-8","Core sıkı, topuk yerde, negatif kontrollü."],
-["Leg Press","3x10","Platformu kontrollü indir."],
-["Romanian Deadlift","3x8-10","Hamstring gerilimini hisset."],
-["Leg Curl","3x12","Üstte 1 sn sık."],
-["Standing Calf Raise","4x15-20","Üstte sık, altta 2 sn bekle."],
-["Cable Crunch","3x12-15","Belden değil karından bükül."]
-],
-"Push Day":[
-["Machine Fly","3x12","1 ısınma + 2 work set."],
-["Incline Chest Machine","3x12","Kontrollü indir, üst göğüste sık."],
-["Cable Crossover","3x15","Ortada 1 sn sık."],
-["Machine Shoulder Press","3x12","Üstte kilitleme yapma."],
-["Cable Lateral Raise","4x15","Form odaklı."],
-["Lying Triceps Extension","3x12","Dirsek sabit."],
-["Rope Pushdown","3x12","Kontrollü bırak."]
-],
-"Pull Day":[
-["T-Bar Row","4x10","Gövde sabit, barı alt göğse çek."],
-["Reverse Grip Pulldown","3x12","Lat odaklı, biceps değil sırt çalışsın."],
-["One Arm Dumbbell Row","3x10","Sırtı 1 sn tut."],
-["Seated Cable Row","3x12","Kürek kemiklerini sık."],
-["Rear Delt Fly","3x15","Arka omuz odaklı."],
-["Hammer Curl","3x10","Sallamadan kontrollü."],
-["Incline Dumbbell Curl","2x12","Biceps tam esnet."]
-],
-"Leg Day":[
-["Leg Extension","4x12","Üstte 1 sn sık, diz kilitleme."],
-["Lying Leg Curl","4x12","Hamstring hissi odaklı."],
-["Bulgarian Split Squat","3x10 each leg","Kalça + quad birlikte çalışsın."],
-["Walking Lunge","3x12 each leg","Adımı kontrollü at."],
-["Leg Press","2x20","Yüksek tekrar, yanma odaklı."],
-["Standing Calf Raise","4x20","Yarım tekrar yapma."]
-],
-"Rest/Cardio":[
-["Cardio","20-30 dk","Antrenman günü 20 dk, off gün 30 dk; 110-130 bpm."],
-["Weighted Crunch","3x15","Haftada 3 gün kardiyo sonrası."],
-["Reverse Crunch","3x15","Haftada 3 gün kardiyo sonrası."]
-]
+"Upper Day":[["Machine Fly","3x12"],["Incline Smith Press","4x8-10"],["Lat Pulldown","4x10"],["Wide Grip Row","3x12"],["Lateral Raise","3x15"],["Face Pull","3x15"],["Barbell Curl","3x10"],["Rope Pushdown","3x12"]],
+"Lower Day":[["Squat","4x6-8"],["Leg Press","3x10"],["Romanian Deadlift","3x8-10"],["Leg Curl","3x12"],["Standing Calf Raise","4x15-20"],["Cable Crunch","3x12-15"]],
+"Push Day":[["Machine Fly","3x12"],["Incline Chest Machine","3x12"],["Cable Crossover","3x15"],["Machine Shoulder Press","3x12"],["Cable Lateral Raise","4x15"],["Lying Triceps Extension","3x12"],["Rope Pushdown","3x12"]],
+"Pull Day":[["T-Bar Row","4x10"],["Reverse Grip Pulldown","3x12"],["One Arm Dumbbell Row","3x10"],["Seated Cable Row","3x12"],["Rear Delt Fly","3x15"],["Hammer Curl","3x10"],["Incline Dumbbell Curl","2x12"]],
+"Leg Day":[["Leg Extension","4x12"],["Lying Leg Curl","4x12"],["Bulgarian Split Squat","3x10 each leg"],["Walking Lunge","3x12 each leg"],["Leg Press","2x20"],["Standing Calf Raise","4x20"]],
+"Rest/Cardio":[["Cardio","20-30 dk"],["Weighted Crunch","3x15"],["Reverse Crunch","3x15"]]
 };
 
 const nutritionItems=[
-"Uyanır uyanmaz: 1 yemek kaşığı elma sirkesi",
-"Uyanır uyanmaz: yarım limon",
-"Kardiyo öncesi: 1 fincan kahve",
-"Öğün 1: 5 yumurta beyazı + 1 tam yumurta",
-"Öğün 1: 50g glutensiz yulaf ezmesi veya rice cream",
-"Öğün 1: 40g ananas veya 40g kırmızı orman meyvesi",
-"Öğün 1: 1 çay kaşığı tarçın veya kakao",
-"Öğün 2: 150g tavuk göğüs veya hindi göğüs",
-"Öğün 2: 50g basmati pirinç",
-"Öğün 2: 5g zeytinyağı",
-"Öğün 2: 100g salata veya haşlanmış sebze",
-"Öğün 3: 150g tavuk/hindi/yağsız kıyma",
-"Öğün 3: 50g basmati pirinç",
-"Öğün 3: 5g zeytinyağı",
-"Öğün 4: 180g tavuk/hindi/mezgit",
-"Öğün 4: 200g haşlanmış patates veya tatlı patates",
-"Öğün 4: 5g zeytinyağı",
-"Günlük 4 litre su",
-"Günlük 2 bardak sade kahve veya yeşil çay",
-"Vitamin: 300mg Magnesium Complex",
-"Vitamin: 500mg Berberin",
-"Vitamin: 4000iu D3K2",
-"Vitamin: 1000mg Omega 3"
+"Elma sirkesi","Yarım limon","Kardiyo öncesi kahve","Öğün 1: yumurta","Öğün 1: yulaf/rice cream","Öğün 1: meyve","Öğün 1: tarçın/kakao",
+"Öğün 2: tavuk/hindi","Öğün 2: basmati","Öğün 2: zeytinyağı","Öğün 2: salata/sebze",
+"Öğün 3: protein","Öğün 3: basmati","Öğün 3: zeytinyağı",
+"Öğün 4: protein","Öğün 4: patates/tatlı patates","Öğün 4: zeytinyağı",
+"4 litre su","2 bardak kahve/yeşil çay","Magnesium","Berberin","D3K2","Omega 3"
 ];
 
 function today(){return new Date().toISOString().split("T")[0]}
-todayDate.value=today();
-bodyDate.value=today();
+workoutDate.value=today(); nutritionDate.value=today();
 
-window.signUp=async function(){
-try{await createUserWithEmailAndPassword(auth,email.value,password.value)}
-catch(e){alert(e.message)}
-};
-
-window.login=async function(){
-try{await signInWithEmailAndPassword(auth,email.value,password.value)}
-catch(e){alert(e.message)}
-};
-
-window.logout=function(){signOut(auth)};
+window.signUp=async()=>{try{await createUserWithEmailAndPassword(auth,email.value,password.value)}catch(e){alert(e.message)}};
+window.login=async()=>{try{await signInWithEmailAndPassword(auth,email.value,password.value)}catch(e){alert(e.message)}};
+window.logout=()=>signOut(auth);
 
 onAuthStateChanged(auth,user=>{
-if(user){
-currentUser=user;
-authBox.classList.add("hidden");
-app.classList.remove("hidden");
-userEmail.textContent=user.email;
-loadData();
-}else{
-currentUser=null;
-authBox.classList.remove("hidden");
-app.classList.add("hidden");
-}
+if(user){currentUser=user;authBox.classList.add("hidden");app.classList.remove("hidden");userEmail.textContent=user.email;loadData()}
+else{currentUser=null;authBox.classList.remove("hidden");app.classList.add("hidden")}
 });
 
-window.switchTab=function(tabId,btn){
+window.switchTab=(id,btn)=>{
 document.querySelectorAll(".tab-content").forEach(t=>t.classList.remove("active"));
 document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));
-document.getElementById(tabId).classList.add("active");
-btn.classList.add("active");
+document.getElementById(id).classList.add("active");btn.classList.add("active");
 };
 
 function renderProgram(){
-let html="";
-Object.entries(program).forEach(([day,exercises])=>{
-html+=`<div class="card"><h3>${day}</h3>`;
-exercises.forEach(ex=>{
-html+=`<div class="exercise"><b>${ex[0]}</b> <span class="badge badge-blue">${ex[1]}</span><div class="small">${ex[2]}</div></div>`;
-});
-html+=`</div>`;
-});
-programList.innerHTML=html;
+programList.innerHTML=Object.entries(program).map(([day,exs])=>`
+<div class="card"><h3>${day}</h3>${exs.map(e=>`<div class="exercise"><b>${e[0]}</b> <span class="badge badge-blue">${e[1]}</span></div>`).join("")}</div>
+`).join("");
 }
+
+window.renderWorkoutChecklist=()=>{
+const day=workoutDay.value;if(!day){workoutChecklist.innerHTML="";return}
+workoutChecklist.innerHTML=program[day].map((e,i)=>`
+<div class="exercise">
+<label class="check-row"><input type="checkbox" id="ex_${i}" onchange="liveWorkout()"> <span><b>${e[0]}</b> <span class="badge badge-blue">${e[1]}</span></span></label>
+<div class="grid grid-3" style="margin-top:8px"><input id="sets_${i}" placeholder="Set"><input id="reps_${i}" placeholder="Reps"><input id="kg_${i}" placeholder="Kg"></div>
+<textarea id="note_${i}" placeholder="Not"></textarea>
+</div>`).join("");
+liveWorkout();
+};
+
+window.liveWorkout=()=>{
+const day=workoutDay.value;if(!day)return;
+let done=0,total=program[day].length;
+for(let i=0;i<total;i++)if(document.getElementById(`ex_${i}`).checked)done++;
+let p=Math.round(done/total*100);
+todayWorkoutPercent.textContent=p+"%";todayWorkoutBar.style.width=p+"%";
+};
 
 function renderNutritionChecklist(){
-nutritionChecklist.innerHTML=nutritionItems.map((item,i)=>`
-<div class="check-item">
-<label class="check-row">
-<input type="checkbox" id="nutri_${i}">
-<span>${item}</span>
-</label>
-</div>
-`).join("");
+nutritionChecklist.innerHTML=nutritionItems.map((x,i)=>`
+<div class="check-item"><label class="check-row"><input type="checkbox" id="nut_${i}" onchange="liveNutrition()"> <span>${x}</span></label></div>`).join("");
 }
 
-window.renderWorkoutChecklist=function(){
-const day=workoutDay.value;
-if(!day){workoutChecklist.innerHTML="";return}
-let html=`<h3>${day}</h3>`;
-program[day].forEach((ex,i)=>{
-html+=`
-<div class="exercise">
-<label class="check-row">
-<input type="checkbox" id="ex_done_${i}" onchange="updateLiveWorkoutPercent()">
-<span><b>${ex[0]}</b> <span class="badge badge-blue">${ex[1]}</span></span>
-</label>
-<div class="small">${ex[2]}</div>
-<div class="grid grid-3" style="margin-top:8px;">
-<input id="ex_sets_${i}" placeholder="Set">
-<input id="ex_reps_${i}" placeholder="Reps">
-<input id="ex_weight_${i}" placeholder="Kg">
-</div>
-<textarea id="ex_note_${i}" placeholder="Not"></textarea>
-</div>`;
-});
-workoutChecklist.innerHTML=html;
-updateLiveWorkoutPercent();
-};
-
-window.updateLiveWorkoutPercent=function(){
-const day=workoutDay.value;
-if(!day){return}
-const total=program[day].length;
+window.liveNutrition=()=>{
 let done=0;
-for(let i=0;i<total;i++){
-if(document.getElementById(`ex_done_${i}`)?.checked)done++;
-}
-const percent=total?Math.round(done/total*100):0;
-todayWorkoutPercent.textContent=percent+"%";
-todayWorkoutBar.style.width=percent+"%";
+nutritionItems.forEach((_,i)=>{if(document.getElementById(`nut_${i}`).checked)done++});
+let p=Math.round(done/nutritionItems.length*100);
+todayNutritionPercent.textContent=p+"%";todayNutritionBar.style.width=p+"%";
 };
 
-function getNutritionResult(){
+window.saveWorkoutLog=async()=>{
+const day=workoutDay.value;if(!day)return alert("Antrenman günü seç.");
 let done=0;
-const completed={};
-nutritionItems.forEach((_,i)=>{
-const checked=document.getElementById(`nutri_${i}`)?.checked||false;
-completed[i]=checked;
-if(checked)done++;
+const entries=program[day].map((e,i)=>{
+let completed=document.getElementById(`ex_${i}`).checked;if(completed)done++;
+return{name:e[0],target:e[1],completed,sets:sets_${i}.value,reps:reps_${i}.value,kg:kg_${i}.value,note:note_${i}.value}
 });
-const percent=Math.round(done/nutritionItems.length*100);
-return{completed,percent,done,total:nutritionItems.length};
-}
-
-function getWorkoutResult(){
-const day=workoutDay.value;
-if(!day)return null;
-let done=0;
-const entries=program[day].map((ex,i)=>{
-const completed=document.getElementById(`ex_done_${i}`).checked;
-if(completed)done++;
-return{
-name:ex[0],
-target:ex[1],
-completed,
-sets:document.getElementById(`ex_sets_${i}`).value,
-reps:document.getElementById(`ex_reps_${i}`).value,
-weight:document.getElementById(`ex_weight_${i}`).value,
-note:document.getElementById(`ex_note_${i}`).value
-};
-});
-const percent=Math.round(done/program[day].length*100);
-return{day,entries,percent,done,total:program[day].length};
-}
-
-window.saveDailyLog=async function(){
-if(!currentUser)return alert("Önce giriş yap.");
-const date=todayDate.value;
-const workout=getWorkoutResult();
-const nutrition=getNutritionResult();
-
-await addDoc(collection(db,"gymDailyLogs"),{
-userId:currentUser.uid,
-date,
-workoutDay:workout?workout.day:"",
-workoutEntries:workout?workout.entries:[],
-workoutPercent:workout?workout.percent:0,
-nutritionCompleted:nutrition.completed,
-nutritionPercent:nutrition.percent,
-note:dailyNote.value,
-createdAt:serverTimestamp()
-});
-
-alert("Gün kaydedildi.");
-dailyNote.value="";
-workoutDay.value="";
-workoutChecklist.innerHTML="";
-renderNutritionChecklist();
-todayWorkoutPercent.textContent="0%";
-todayWorkoutBar.style.width="0%";
-todayNutritionPercent.textContent="0%";
-todayNutritionBar.style.width="0%";
+let percent=Math.round(done/entries.length*100);
+await addDoc(collection(db,"gymWorkoutLogs"),{userId:currentUser.uid,date:workoutDate.value,day,entries,percent,note:workoutNote.value,createdAt:serverTimestamp()});
+alert("Antrenman kaydedildi.");workoutDay.value="";workoutChecklist.innerHTML="";workoutNote.value="";
 };
 
-nutritionChecklist.addEventListener("change",()=>{
-const n=getNutritionResult();
-todayNutritionPercent.textContent=n.percent+"%";
-todayNutritionBar.style.width=n.percent+"%";
-});
-
-function renderHistory(){
-if(dailyLogs.length===0){
-historyList.innerHTML=`<div class="small">Henüz kayıt yok.</div>`;
-return;
-}
-historyList.innerHTML=dailyLogs.map(log=>{
-const missingWorkout=(log.workoutEntries||[]).filter(e=>!e.completed).map(e=>e.name);
-const missingNutrition=nutritionItems.filter((_,i)=>!(log.nutritionCompleted||{})[i]);
-return`
-<div class="card">
-<h3>${log.date}</h3>
-<span class="badge ${log.workoutPercent>=80?"badge-green":"badge-orange"}">Antrenman: ${log.workoutPercent||0}%</span>
-<span class="badge ${log.nutritionPercent>=80?"badge-green":"badge-orange"}">Beslenme: ${log.nutritionPercent||0}%</span>
-${log.workoutDay?`<div class="note"><b>${log.workoutDay}</b></div>`:""}
-${missingWorkout.length?`<div class="note"><b>Eksik egzersizler:</b><br>${missingWorkout.join("<br>")}</div>`:""}
-${missingNutrition.length?`<div class="note"><b>Eksik beslenme maddeleri:</b><br>${missingNutrition.slice(0,8).join("<br>")}${missingNutrition.length>8?"<br>...":""}</div>`:""}
-${log.note?`<div class="note">${log.note}</div>`:""}
-<button class="btn-red" onclick="deleteDailyLog('${log.id}')">Sil</button>
-</div>`;
-}).join("");
-}
-
-window.deleteDailyLog=id=>deleteDoc(doc(db,"gymDailyLogs",id));
-
-window.saveBodyProgress=async function(){
-if(!bodyWeight.value)return alert("Kilo gir.");
-await addDoc(collection(db,"gymBodyProgress"),{
-userId:currentUser.uid,
-date:bodyDate.value,
-weight:bodyWeight.value,
-note:bodyNote.value,
-createdAt:serverTimestamp()
-});
-bodyWeight.value="";
-bodyNote.value="";
+window.saveNutritionLog=async()=>{
+let done=0,completed={};
+nutritionItems.forEach((_,i)=>{let c=document.getElementById(`nut_${i}`).checked;completed[i]=c;if(c)done++});
+let percent=Math.round(done/nutritionItems.length*100);
+await addDoc(collection(db,"gymNutritionLogs"),{userId:currentUser.uid,date:nutritionDate.value,completed,percent,note:nutritionNote.value,createdAt:serverTimestamp()});
+alert("Beslenme kaydedildi.");nutritionNote.value="";renderNutritionChecklist();liveNutrition();
 };
 
-function renderBodyHistory(){
-if(bodyLogs.length===0){
-bodyHistory.innerHTML=`<div class="small">Henüz kilo kaydı yok.</div>`;
-return;
-}
-bodyHistory.innerHTML=bodyLogs.map(b=>`
-<div class="card">
-<b>${b.date}</b> — ${b.weight} kg
-${b.note?`<div class="note">${b.note}</div>`:""}
-<button class="btn-red" onclick="deleteBody('${b.id}')">Sil</button>
-</div>
-`).join("");
+function renderHistories(){
+workoutHistory.innerHTML=workoutLogs.length?workoutLogs.map(w=>`
+<div class="card"><h3>${w.date} — ${w.day}</h3><span class="badge ${w.percent>=80?"badge-green":"badge-orange"}">${w.percent}% uyum</span>
+${w.entries.filter(e=>!e.completed).length?`<div class="note"><b>Eksikler:</b><br>${w.entries.filter(e=>!e.completed).map(e=>e.name).join("<br>")}</div>`:""}
+${w.note?`<div class="note">${w.note}</div>`:""}<button class="btn-red" onclick="deleteWorkout('${w.id}')">Sil</button></div>`).join(""):"Henüz antrenman kaydı yok.";
+
+nutritionHistory.innerHTML=nutritionLogs.length?nutritionLogs.map(n=>{
+let miss=nutritionItems.filter((_,i)=>!n.completed[i]);
+return `<div class="card"><h3>${n.date}</h3><span class="badge ${n.percent>=80?"badge-green":"badge-orange"}">${n.percent}% uyum</span>
+${miss.length?`<div class="note"><b>Eksikler:</b><br>${miss.slice(0,10).join("<br>")}${miss.length>10?"<br>...":""}</div>`:""}
+${n.note?`<div class="note">${n.note}</div>`:""}<button class="btn-red" onclick="deleteNutrition('${n.id}')">Sil</button></div>`;
+}).join(""):"Henüz beslenme kaydı yok.";
 }
 
-window.deleteBody=id=>deleteDoc(doc(db,"gymBodyProgress",id));
+window.deleteWorkout=id=>deleteDoc(doc(db,"gymWorkoutLogs",id));
+window.deleteNutrition=id=>deleteDoc(doc(db,"gymNutritionLogs",id));
 
 function renderStats(){
-totalDays.textContent=dailyLogs.length;
-if(dailyLogs.length===0){
-avgWorkout.textContent="0%";
-avgNutrition.textContent="0%";
-weeklyWorkoutCount.textContent="0";
-return;
-}
-const aw=Math.round(dailyLogs.reduce((a,b)=>a+(b.workoutPercent||0),0)/dailyLogs.length);
-const an=Math.round(dailyLogs.reduce((a,b)=>a+(b.nutritionPercent||0),0)/dailyLogs.length);
-avgWorkout.textContent=aw+"%";
-avgNutrition.textContent=an+"%";
-
-const now=new Date();
-const weekAgo=new Date();
-weekAgo.setDate(now.getDate()-7);
-const weekly=dailyLogs.filter(x=>new Date(x.date)>=weekAgo && (x.workoutPercent||0)>0);
-weeklyWorkoutCount.textContent=weekly.length;
-
-const todayLog=dailyLogs.find(x=>x.date===todayDate.value);
-if(todayLog){
-todayWorkoutPercent.textContent=(todayLog.workoutPercent||0)+"%";
-todayWorkoutBar.style.width=(todayLog.workoutPercent||0)+"%";
-todayNutritionPercent.textContent=(todayLog.nutritionPercent||0)+"%";
-todayNutritionBar.style.width=(todayLog.nutritionPercent||0)+"%";
-}
+let todayW=workoutLogs.find(x=>x.date===today());
+let todayN=nutritionLogs.find(x=>x.date===today());
+let wp=todayW?todayW.percent:0,np=todayN?todayN.percent:0;
+todayWorkoutPercent.textContent=wp+"%";todayWorkoutBar.style.width=wp+"%";
+todayNutritionPercent.textContent=np+"%";todayNutritionBar.style.width=np+"%";
+let weekAgo=new Date();weekAgo.setDate(new Date().getDate()-7);
+weeklyWorkoutCount.textContent=workoutLogs.filter(x=>new Date(x.date)>=weekAgo).length;
 }
 
 function loadData(){
-onSnapshot(query(collection(db,"gymDailyLogs")),snap=>{
-dailyLogs=snap.docs.map(d=>({id:d.id,...d.data()}))
-.filter(x=>x.userId===currentUser.uid)
-.sort((a,b)=>(b.date||"").localeCompare(a.date||""));
-renderHistory();
-renderStats();
+onSnapshot(query(collection(db,"gymWorkoutLogs")),snap=>{
+workoutLogs=snap.docs.map(d=>({id:d.id,...d.data()})).filter(x=>x.userId===currentUser.uid).sort((a,b)=>(b.date||"").localeCompare(a.date||""));
+renderHistories();renderStats();
 });
-
-onSnapshot(query(collection(db,"gymBodyProgress")),snap=>{
-bodyLogs=snap.docs.map(d=>({id:d.id,...d.data()}))
-.filter(x=>x.userId===currentUser.uid)
-.sort((a,b)=>(b.date||"").localeCompare(a.date||""));
-renderBodyHistory();
+onSnapshot(query(collection(db,"gymNutritionLogs")),snap=>{
+nutritionLogs=snap.docs.map(d=>({id:d.id,...d.data()})).filter(x=>x.userId===currentUser.uid).sort((a,b)=>(b.date||"").localeCompare(a.date||""));
+renderHistories();renderStats();
 });
 }
 
