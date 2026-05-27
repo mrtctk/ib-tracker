@@ -1,495 +1,599 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Gym Tracker</title>
 
 <style>
-*{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:#f5f5f5;color:#111}
-.container{max-width:1200px;margin:30px auto;padding:20px}
-.card{background:white;padding:18px;margin-bottom:18px;border-radius:14px;box-shadow:0 4px 12px rgba(0,0,0,.06)}
-.grid{display:grid;gap:12px}
-.grid-2{grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
-.grid-3{grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
-input,select,textarea,button{width:100%;padding:10px 12px;border-radius:10px;border:1px solid #d0d0d0;font-size:14px;font-family:inherit}
-textarea{min-height:80px;resize:vertical}
-button{cursor:pointer;border:none;margin-top:8px}
-.btn{background:#2563eb;color:white}
-.btn-green{background:#16a34a;color:white}
-.btn-red{background:#dc2626;color:white}
-.btn-gray{background:#6b7280;color:white}
-.hidden{display:none}
-.tabs{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap}
-.tab-btn{width:auto;padding:12px 18px;border-radius:999px;background:white;border:1px solid #d0d0d0;color:#111;font-weight:bold}
-.tab-btn.active{background:#2563eb;color:white;border-color:#2563eb}
-.tab-content{display:none}
-.tab-content.active{display:block}
-.badge{display:inline-block;padding:5px 10px;border-radius:999px;font-size:12px;font-weight:bold;margin:4px 4px 4px 0}
-.badge-blue{background:#dbeafe;color:#1d4ed8}
-.badge-green{background:#dcfce7;color:#166534}
-.badge-orange{background:#ffedd5;color:#9a3412}
-.exercise{border:1px solid #e5e7eb;background:#fafafa;border-radius:12px;padding:12px;margin-bottom:10px}
-.note{margin-top:6px;padding:8px 10px;background:#f9fafb;border-left:4px solid #cbd5e1;border-radius:8px;white-space:pre-wrap;overflow-wrap:anywhere}
-.small{font-size:13px;color:#666}
-.stat{font-size:24px;font-weight:bold}
-.check-row{display:flex;align-items:center;gap:10px;margin:8px 0}
-.check-row input{width:auto}
+*{
+box-sizing:border-box;
+}
+
+body{
+margin:0;
+font-family:Arial,sans-serif;
+background:#f3f4f6;
+color:#111827;
+}
+
+.container{
+max-width:1200px;
+margin:30px auto;
+padding:20px;
+}
+
+.card{
+background:white;
+padding:20px;
+border-radius:16px;
+margin-bottom:20px;
+box-shadow:0 4px 12px rgba(0,0,0,0.06);
+}
+
+h1,h2,h3{
+margin-top:0;
+}
+
+input,select,textarea{
+width:100%;
+padding:12px;
+margin-top:8px;
+border-radius:10px;
+border:1px solid #d1d5db;
+font-size:14px;
+}
+
+textarea{
+resize:vertical;
+min-height:80px;
+}
+
+button{
+padding:12px;
+border:none;
+border-radius:10px;
+cursor:pointer;
+font-weight:bold;
+margin-top:10px;
+}
+
+.btn{
+background:#2563eb;
+color:white;
+}
+
+.btn-green{
+background:#16a34a;
+color:white;
+}
+
+.btn-red{
+background:#dc2626;
+color:white;
+}
+
+.btn-gray{
+background:#6b7280;
+color:white;
+}
+
+.hidden{
+display:none;
+}
+
+.tabs{
+display:flex;
+gap:10px;
+margin-bottom:20px;
+flex-wrap:wrap;
+}
+
+.tab-btn{
+background:white;
+border:1px solid #d1d5db;
+padding:12px 18px;
+border-radius:999px;
+font-weight:bold;
+}
+
+.tab-btn.active{
+background:#2563eb;
+color:white;
+border-color:#2563eb;
+}
+
+.tab-content{
+display:none;
+}
+
+.tab-content.active{
+display:block;
+}
+
+.exercise{
+background:#f9fafb;
+padding:14px;
+border-radius:12px;
+margin-bottom:12px;
+border:1px solid #e5e7eb;
+}
+
+.badge{
+display:inline-block;
+padding:5px 10px;
+border-radius:999px;
+font-size:12px;
+font-weight:bold;
+margin-top:5px;
+}
+
+.badge-blue{
+background:#dbeafe;
+color:#1d4ed8;
+}
+
+.note{
+background:#f3f4f6;
+padding:10px;
+border-radius:10px;
+margin-top:8px;
+white-space:pre-wrap;
+overflow-wrap:anywhere;
+}
+
+.grid{
+display:grid;
+gap:12px;
+}
+
+.grid-2{
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+}
+
+.grid-3{
+grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+}
+
+.small{
+font-size:13px;
+color:#6b7280;
+}
+
+.stat{
+font-size:28px;
+font-weight:bold;
+}
 </style>
 </head>
 
 <body>
-<div class="container">
-<h1>Gym Tracker</h1>
-<p class="small">Programına bağlı antrenman, beslenme ve gelişim takip sistemi.</p>
 
+<div class="container">
+
+<h1>Gym Tracker</h1>
+
+<!-- LOGIN -->
 <div id="authBox" class="card">
+
 <h2>Login / Sign Up</h2>
+
 <input id="email" placeholder="Email">
 <input id="password" type="password" placeholder="Password">
+
 <button class="btn" onclick="signUp()">Sign Up</button>
 <button class="btn-gray" onclick="login()">Login</button>
+
 </div>
 
+<!-- APP -->
 <div id="app" class="hidden">
+
 <div class="card">
 <p>Hoş geldin: <b id="userEmail"></b></p>
 <button class="btn-gray" onclick="logout()">Çıkış</button>
 </div>
 
 <div class="tabs">
-<button class="tab-btn active" onclick="switchTab('programTab', this)">Program</button>
-<button class="tab-btn" onclick="switchTab('workoutTab', this)">Workout Log</button>
-<button class="tab-btn" onclick="switchTab('nutritionTab', this)">Nutrition</button>
-<button class="tab-btn" onclick="switchTab('progressTab', this)">Progress</button>
+
+<button class="tab-btn active" onclick="switchTab('programTab', this)">
+Program
+</button>
+
+<button class="tab-btn" onclick="switchTab('workoutTab', this)">
+Workout Log
+</button>
+
+<button class="tab-btn" onclick="switchTab('nutritionTab', this)">
+Nutrition
+</button>
+
+<button class="tab-btn" onclick="switchTab('progressTab', this)">
+Progress
+</button>
+
 </div>
 
+<!-- PROGRAM -->
 <div id="programTab" class="tab-content active">
+
 <div class="card">
 <h2>Programım</h2>
-<div id="programList"></div>
-</div>
+
+<div class="exercise">
+<b>Incline Smith Press</b>
+<div class="badge badge-blue">4x8-10</div>
+<div class="small">Negatif kontrollü indir.</div>
 </div>
 
+<div class="exercise">
+<b>Lat Pulldown</b>
+<div class="badge badge-blue">4x10</div>
+<div class="small">Barı göğse çek.</div>
+</div>
+
+<div class="exercise">
+<b>Lateral Raise</b>
+<div class="badge badge-blue">3x15</div>
+<div class="small">Form odaklı.</div>
+</div>
+
+</div>
+
+</div>
+
+<!-- WORKOUT -->
 <div id="workoutTab" class="tab-content">
-<div class="card">
-<h2>Bugünkü Antrenman</h2>
-<div class="grid grid-2">
-<select id="workoutDay" onchange="renderWorkoutForm()">
-<option value="">Gün seç</option>
-<option value="Upper Day">Upper Day</option>
-<option value="Lower Day">Lower Day</option>
-<option value="Push Day">Push Day</option>
-<option value="Pull Day">Pull Day</option>
-<option value="Leg Day">Leg Day</option>
-</select>
-<input id="workoutDate" type="date">
-</div>
-<div id="workoutForm" style="margin-top:15px"></div>
-<button class="btn-green" onclick="saveWorkout()">Antrenmanı Kaydet</button>
-</div>
 
 <div class="card">
-<h2>Geçmiş Antrenmanlar</h2>
-<div id="workoutHistory"></div>
-</div>
-</div>
 
-<div id="nutritionTab" class="tab-content">
-<div class="card">
-<h2>Günlük Beslenme Takibi</h2>
-<input id="nutritionDate" type="date">
-<div id="nutritionChecklist"></div>
-<textarea id="nutritionNote" placeholder="Beslenme notu"></textarea>
-<button class="btn-green" onclick="saveNutrition()">Beslenmeyi Kaydet</button>
-</div>
+<h2>Workout Log</h2>
 
-<div class="card">
-<h2>Beslenme Geçmişi</h2>
-<div id="nutritionHistory"></div>
-</div>
-</div>
+<input id="exerciseName" placeholder="Exercise">
 
-<div id="progressTab" class="tab-content">
 <div class="grid grid-3">
-<div class="card">
-<h3>Bu Hafta Antrenman</h3>
-<div class="stat" id="weeklyWorkoutCount">0</div>
+
+<input id="sets" placeholder="Set">
+<input id="reps" placeholder="Reps">
+<input id="weight" placeholder="Kg">
+
 </div>
-<div class="card">
-<h3>Son Antrenman</h3>
-<div class="stat" id="lastWorkout">-</div>
+
+<textarea id="exerciseNote" placeholder="Not"></textarea>
+
+<button class="btn-green" onclick="saveWorkout()">
+Workout Kaydet
+</button>
+
 </div>
+
+<div class="card">
+
+<h2>Workout History</h2>
+
+<div id="workoutList"></div>
+
+</div>
+
+</div>
+
+<!-- NUTRITION -->
+<div id="nutritionTab" class="tab-content">
+
+<div class="card">
+
+<h2>Nutrition</h2>
+
+<input id="meal" placeholder="Öğün">
+
+<textarea id="mealNote" placeholder="Not"></textarea>
+
+<button class="btn-green" onclick="saveMeal()">
+Öğün Kaydet
+</button>
+
+</div>
+
+<div class="card">
+
+<h2>Nutrition History</h2>
+
+<div id="mealList"></div>
+
+</div>
+
+</div>
+
+<!-- PROGRESS -->
+<div id="progressTab" class="tab-content">
+
+<div class="grid grid-2">
+
+<div class="card">
+<h3>Toplam Workout</h3>
+<div class="stat" id="workoutCount">0</div>
+</div>
+
 <div class="card">
 <h3>Toplam Volume</h3>
 <div class="stat" id="totalVolume">0</div>
 </div>
-</div>
 
-<div class="card">
-<h2>Vücut Ağırlığı Kaydı</h2>
-<div class="grid grid-2">
-<input id="bodyDate" type="date">
-<input id="bodyWeight" placeholder="Kilo örn: 78.5">
-</div>
-<textarea id="bodyNote" placeholder="Not"></textarea>
-<button class="btn" onclick="saveBodyProgress()">Kaydet</button>
-</div>
-
-<div class="card">
-<h2>Body Progress Geçmişi</h2>
-<div id="bodyHistory"></div>
-</div>
 </div>
 
 </div>
+
+</div>
+
 </div>
 
 <script type="module">
+
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+
 import {
-getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword,
-signOut, onAuthStateChanged
+getAuth,
+createUserWithEmailAndPassword,
+signInWithEmailAndPassword,
+signOut,
+onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
+
 import {
-getFirestore, collection, addDoc, deleteDoc, doc, onSnapshot, query, serverTimestamp
+getFirestore,
+collection,
+addDoc,
+query,
+onSnapshot
 } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "BURAYA_API_KEY_YAZ",
+  apiKey: "AIzaSyCJy3O5GgABLuEi9pJ2C9yp_uxTl1NKbIU",
   authDomain: "ib-tracker-3fa15.firebaseapp.com",
   projectId: "ib-tracker-3fa15",
   storageBucket: "ib-tracker-3fa15.firebasestorage.app",
   messagingSenderId: "1084870933621",
-  appId: "1:1084870933621:web:42aaf1a1c273f2e6fb8c3c"
+  appId: "1:1084870933621:web:42aaf1a1c273f2e6fb8c3c",
+  measurementId: "G-SHTVY448SY"
 };
 
 const appFirebase = initializeApp(firebaseConfig);
+
 const auth = getAuth(appFirebase);
+
 const db = getFirestore(appFirebase);
 
 let currentUser = null;
+
 let workouts = [];
-let nutritions = [];
-let bodyLogs = [];
 
-const program = {
-"Upper Day": [
-["Machine Fly","3x12","Isınma + 2 work set. Göğsü maksimum aç, ortada 1 sn sık."],
-["Incline Smith Press","4x8-10","2 ısınma + 2 work set. Negatif 2-3 sn, üstte kilitleme."],
-["Lat Pulldown","4x10","Göğse doğru çek, barı dik indir."],
-["Wide Grip Row","3x12","Dirsekleri dışa açarak çek, upper back odaklı."],
-["Lateral Raise","3x15","Ağırlığı omuzdan kaldır, trapeze kaçırma."],
-["Face Pull","3x15","İpi yüz hizasına çek, arka omuzu sık."],
-["Barbell Curl","3x10","Dirsek sabit, negatif yavaş."],
-["Rope Pushdown","3x12","Triceps 1 sn sık."]
-],
-"Lower Day": [
-["Squat","4x6-8","Core sıkı, topuk yerde, negatif kontrollü."],
-["Leg Press","3x10","Platformu kontrollü indir."],
-["Romanian Deadlift","3x8-10","Kalçayı geriye gönder, hamstring gerilimini hisset."],
-["Leg Curl","3x12","Üstte 1 sn sık."],
-["Standing Calf Raise","4x15-20","Üstte sık, altta 2 sn bekle."],
-["Cable Crunch","3x12-15","Belden değil karından bükül."]
-],
-"Push Day": [
-["Machine Fly","3x12","1 ısınma + 2 work set."],
-["Incline Chest Machine","3x12","Kontrollü indir, üst göğüste sık."],
-["Cable Crossover","3x15","Göğsü gerdir, ortada 1 sn sık."],
-["Machine Shoulder Press","3x12","Dirsekler omuz hizasının biraz önünde."],
-["Cable Lateral Raise","4x15","Form odaklı."],
-["Lying Triceps Extension","3x12","Dirsek sabit."],
-["Rope Pushdown","3x12","Kontrollü bırak."]
-],
-"Pull Day": [
-["T-Bar Row","4x10","Gövde sabit, barı alt göğse çek."],
-["Reverse Grip Pulldown","3x12","Lat odaklı çek."],
-["One Arm Dumbbell Row","3x10","Sırtı 1 sn sık."],
-["Seated Cable Row","3x12","Kürek kemiklerini sık."],
-["Rear Delt Fly","3x15","Arka omuz odaklı."],
-["Hammer Curl","3x10","Sallamadan kontrollü."],
-["Incline Dumbbell Curl","2x12","Biceps tam esnet."]
-],
-"Leg Day": [
-["Leg Extension","4x12","Üstte 1 sn sık."],
-["Lying Leg Curl","4x12","Hamstring hissi odaklı."],
-["Bulgarian Split Squat","3x10 each leg","Kalça + quad birlikte çalışsın."],
-["Walking Lunge","3x12 each leg","Adımı kontrollü at."],
-["Leg Press","2x20","Yüksek tekrar, yanma odaklı."],
-["Standing Calf Raise","4x20","Yarım tekrar yapma."]
-]
-};
-
-const nutritionItems = [
-"Uyanır uyanmaz: 1 yemek kaşığı elma sirkesi + yarım limon",
-"Kardiyo öncesi: 1 fincan kahve",
-"Öğün 1: 5 yumurta beyazı + 1 tam yumurta",
-"Öğün 1: 50g glutensiz yulaf veya rice cream",
-"Öğün 1: 40g ananas veya kırmızı orman meyvesi",
-"Öğün 2: 150g tavuk/hindi + 50g basmati + 5g zeytinyağı + salata/sebze",
-"Öğün 3: 150g tavuk/hindi/yağsız kıyma + 50g basmati + 5g zeytinyağı",
-"Öğün 4: 180g tavuk/hindi/mezgit + 200g patates/tatlı patates + 5g zeytinyağı",
-"Günlük 4 litre su",
-"Günlük 2 bardak sade kahve veya yeşil çay",
-"Vitamin: 300mg magnesium complex",
-"Vitamin: 500mg berberin",
-"Vitamin: 4000iu D3K2",
-"Vitamin: 1000mg omega 3"
-];
-
-function today(){
-  return new Date().toISOString().split("T")[0];
-}
-
-document.getElementById("workoutDate").value = today();
-document.getElementById("nutritionDate").value = today();
-document.getElementById("bodyDate").value = today();
+let meals = [];
 
 window.signUp = async function(){
-  await createUserWithEmailAndPassword(auth, email.value, password.value);
-};
+
+try{
+
+await createUserWithEmailAndPassword(
+auth,
+email.value,
+password.value
+);
+
+alert("Hesap oluşturuldu");
+
+}catch(err){
+
+alert(err.message);
+
+}
+
+}
 
 window.login = async function(){
-  await signInWithEmailAndPassword(auth, email.value, password.value);
-};
+
+try{
+
+await signInWithEmailAndPassword(
+auth,
+email.value,
+password.value
+);
+
+}catch(err){
+
+alert(err.message);
+
+}
+
+}
 
 window.logout = function(){
-  signOut(auth);
-};
+
+signOut(auth);
+
+}
 
 onAuthStateChanged(auth, user => {
-  if(user){
-    currentUser = user;
-    authBox.classList.add("hidden");
-    app.classList.remove("hidden");
-    userEmail.textContent = user.email;
-    loadData();
-  } else {
-    currentUser = null;
-    authBox.classList.remove("hidden");
-    app.classList.add("hidden");
-  }
+
+if(user){
+
+currentUser = user;
+
+authBox.classList.add("hidden");
+
+app.classList.remove("hidden");
+
+userEmail.innerText = user.email;
+
+loadData();
+
+}else{
+
+authBox.classList.remove("hidden");
+
+app.classList.add("hidden");
+
+}
+
 });
 
 window.switchTab = function(tabId, btn){
-  document.querySelectorAll(".tab-content").forEach(t=>t.classList.remove("active"));
-  document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));
-  document.getElementById(tabId).classList.add("active");
-  btn.classList.add("active");
-};
 
-function renderProgram(){
-  let html = "";
-  Object.entries(program).forEach(([day, exercises])=>{
-    html += `<div class="card"><h3>${day}</h3>`;
-    exercises.forEach(ex=>{
-      html += `<div class="exercise"><b>${ex[0]}</b> <span class="badge badge-blue">${ex[1]}</span><div class="small">${ex[2]}</div></div>`;
-    });
-    html += `</div>`;
-  });
-  programList.innerHTML = html;
+document.querySelectorAll(".tab-content")
+.forEach(t=>t.classList.remove("active"));
+
+document.querySelectorAll(".tab-btn")
+.forEach(b=>b.classList.remove("active"));
+
+document.getElementById(tabId)
+.classList.add("active");
+
+btn.classList.add("active");
+
 }
-
-window.renderWorkoutForm = function(){
-  const day = workoutDay.value;
-  if(!day){ workoutForm.innerHTML = ""; return; }
-
-  let html = `<h3>${day}</h3>`;
-  program[day].forEach((ex, i)=>{
-    html += `
-    <div class="exercise">
-      <b>${ex[0]}</b> <span class="badge badge-blue">${ex[1]}</span>
-      <div class="small">${ex[2]}</div>
-      <div class="grid grid-3" style="margin-top:8px;">
-        <input id="sets_${i}" placeholder="Set">
-        <input id="reps_${i}" placeholder="Reps">
-        <input id="weight_${i}" placeholder="Kg">
-      </div>
-      <textarea id="note_${i}" placeholder="Egzersiz notu"></textarea>
-    </div>`;
-  });
-  workoutForm.innerHTML = html;
-};
 
 window.saveWorkout = async function(){
-  const day = workoutDay.value;
-  const date = workoutDate.value;
-  if(!day || !date) return alert("Gün ve tarih seç.");
 
-  const entries = program[day].map((ex, i)=>({
-    name: ex[0],
-    target: ex[1],
-    sets: document.getElementById(`sets_${i}`).value,
-    reps: document.getElementById(`reps_${i}`).value,
-    weight: document.getElementById(`weight_${i}`).value,
-    note: document.getElementById(`note_${i}`).value
-  }));
+if(!exerciseName.value) return;
 
-  await addDoc(collection(db,"gymWorkouts"),{
-    userId: currentUser.uid,
-    day,
-    date,
-    entries,
-    createdAt: serverTimestamp()
-  });
+await addDoc(collection(db,"gymWorkouts"),{
 
-  alert("Antrenman kaydedildi.");
-  workoutDay.value = "";
-  workoutForm.innerHTML = "";
-};
+userId: currentUser.uid,
 
-function renderWorkoutHistory(){
-  if(workouts.length === 0){
-    workoutHistory.innerHTML = `<div class="small">Henüz antrenman kaydı yok.</div>`;
-    return;
-  }
+exercise: exerciseName.value,
 
-  workoutHistory.innerHTML = workouts.map(w=>`
-    <div class="card">
-      <h3>${w.date} — ${w.day}</h3>
-      ${w.entries.map(e=>`
-        <div class="exercise">
-          <b>${e.name}</b>
-          <div>${e.sets || "-"} set × ${e.reps || "-"} reps × ${e.weight || "-"} kg</div>
-          ${e.note ? `<div class="note">${e.note}</div>` : ""}
-        </div>
-      `).join("")}
-      <button class="btn-red" onclick="deleteWorkout('${w.id}')">Sil</button>
-    </div>
-  `).join("");
+sets: sets.value,
+
+reps: reps.value,
+
+weight: weight.value,
+
+note: exerciseNote.value,
+
+date: new Date().toLocaleDateString()
+
+});
+
+exerciseName.value = "";
+sets.value = "";
+reps.value = "";
+weight.value = "";
+exerciseNote.value = "";
+
 }
 
-window.deleteWorkout = id => deleteDoc(doc(db,"gymWorkouts",id));
+window.saveMeal = async function(){
 
-function renderNutritionChecklist(){
-  nutritionChecklist.innerHTML = nutritionItems.map((item,i)=>`
-    <label class="check-row">
-      <input type="checkbox" id="nutri_${i}">
-      <span>${item}</span>
-    </label>
-  `).join("");
-}
+if(!meal.value) return;
 
-window.saveNutrition = async function(){
-  const date = nutritionDate.value;
-  const completed = {};
-  nutritionItems.forEach((_,i)=>{
-    completed[i] = document.getElementById(`nutri_${i}`).checked;
-  });
+await addDoc(collection(db,"gymMeals"),{
 
-  await addDoc(collection(db,"gymNutrition"),{
-    userId: currentUser.uid,
-    date,
-    completed,
-    note: nutritionNote.value,
-    createdAt: serverTimestamp()
-  });
+userId: currentUser.uid,
 
-  alert("Beslenme kaydedildi.");
-  nutritionNote.value = "";
-  renderNutritionChecklist();
-};
+meal: meal.value,
 
-function renderNutritionHistory(){
-  if(nutritions.length === 0){
-    nutritionHistory.innerHTML = `<div class="small">Henüz beslenme kaydı yok.</div>`;
-    return;
-  }
+note: mealNote.value,
 
-  nutritionHistory.innerHTML = nutritions.map(n=>{
-    const doneCount = Object.values(n.completed || {}).filter(Boolean).length;
-    return `
-    <div class="card">
-      <h3>${n.date}</h3>
-      <span class="badge badge-green">${doneCount}/${nutritionItems.length} tamamlandı</span>
-      ${n.note ? `<div class="note">${n.note}</div>` : ""}
-      <button class="btn-red" onclick="deleteNutrition('${n.id}')">Sil</button>
-    </div>`;
-  }).join("");
-}
+date: new Date().toLocaleDateString()
 
-window.deleteNutrition = id => deleteDoc(doc(db,"gymNutrition",id));
+});
 
-window.saveBodyProgress = async function(){
-  if(!bodyWeight.value) return alert("Kilo gir.");
+meal.value = "";
+mealNote.value = "";
 
-  await addDoc(collection(db,"gymBodyProgress"),{
-    userId: currentUser.uid,
-    date: bodyDate.value,
-    weight: bodyWeight.value,
-    note: bodyNote.value,
-    createdAt: serverTimestamp()
-  });
-
-  bodyWeight.value = "";
-  bodyNote.value = "";
-};
-
-function renderBodyHistory(){
-  if(bodyLogs.length === 0){
-    bodyHistory.innerHTML = `<div class="small">Henüz kilo kaydı yok.</div>`;
-    return;
-  }
-
-  bodyHistory.innerHTML = bodyLogs.map(b=>`
-    <div class="card">
-      <b>${b.date}</b> — ${b.weight} kg
-      ${b.note ? `<div class="note">${b.note}</div>` : ""}
-      <button class="btn-red" onclick="deleteBody('${b.id}')">Sil</button>
-    </div>
-  `).join("");
-}
-
-window.deleteBody = id => deleteDoc(doc(db,"gymBodyProgress",id));
-
-function renderStats(){
-  const now = new Date();
-  const weekAgo = new Date();
-  weekAgo.setDate(now.getDate() - 7);
-
-  const weekly = workouts.filter(w => new Date(w.date) >= weekAgo);
-  weeklyWorkoutCount.textContent = weekly.length;
-  lastWorkout.textContent = workouts[0] ? workouts[0].date : "-";
-
-  let volume = 0;
-  workouts.forEach(w=>{
-    w.entries.forEach(e=>{
-      const sets = Number(e.sets) || 0;
-      const reps = Number(e.reps) || 0;
-      const weight = Number(e.weight) || 0;
-      volume += sets * reps * weight;
-    });
-  });
-  totalVolume.textContent = Math.round(volume);
 }
 
 function loadData(){
-  onSnapshot(query(collection(db,"gymWorkouts")), snap=>{
-    workouts = snap.docs.map(d=>({id:d.id,...d.data()}))
-      .filter(x=>x.userId===currentUser.uid)
-      .sort((a,b)=>(b.date||"").localeCompare(a.date||""));
-    renderWorkoutHistory();
-    renderStats();
-  });
 
-  onSnapshot(query(collection(db,"gymNutrition")), snap=>{
-    nutritions = snap.docs.map(d=>({id:d.id,...d.data()}))
-      .filter(x=>x.userId===currentUser.uid)
-      .sort((a,b)=>(b.date||"").localeCompare(a.date||""));
-    renderNutritionHistory();
-  });
+onSnapshot(query(collection(db,"gymWorkouts")), snap=>{
 
-  onSnapshot(query(collection(db,"gymBodyProgress")), snap=>{
-    bodyLogs = snap.docs.map(d=>({id:d.id,...d.data()}))
-      .filter(x=>x.userId===currentUser.uid)
-      .sort((a,b)=>(b.date||"").localeCompare(a.date||""));
-    renderBodyHistory();
-  });
+workouts = snap.docs
+.map(d=>d.data())
+.filter(w=>w.userId===currentUser.uid);
+
+renderWorkouts();
+
+renderStats();
+
+});
+
+onSnapshot(query(collection(db,"gymMeals")), snap=>{
+
+meals = snap.docs
+.map(d=>d.data())
+.filter(m=>m.userId===currentUser.uid);
+
+renderMeals();
+
+});
+
 }
 
-renderProgram();
-renderNutritionChecklist();
+function renderWorkouts(){
+
+workoutList.innerHTML = workouts.map(w=>`
+
+<div class="exercise">
+
+<b>${w.exercise}</b>
+
+<div>
+${w.sets} set × ${w.reps} reps × ${w.weight} kg
+</div>
+
+<div class="small">
+${w.date}
+</div>
+
+${w.note ? `<div class="note">${w.note}</div>` : ""}
+
+</div>
+
+`).join("");
+
+}
+
+function renderMeals(){
+
+mealList.innerHTML = meals.map(m=>`
+
+<div class="exercise">
+
+<b>${m.meal}</b>
+
+<div class="small">
+${m.date}
+</div>
+
+${m.note ? `<div class="note">${m.note}</div>` : ""}
+
+</div>
+
+`).join("");
+
+}
+
+function renderStats(){
+
+workoutCount.innerText = workouts.length;
+
+let total = 0;
+
+workouts.forEach(w=>{
+
+const s = Number(w.sets)||0;
+const r = Number(w.reps)||0;
+const kg = Number(w.weight)||0;
+
+total += s*r*kg;
+
+});
+
+totalVolume.innerText = Math.round(total);
+
+}
+
 </script>
+
 </body>
 </html>
